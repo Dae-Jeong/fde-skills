@@ -1,4 +1,4 @@
-# FDE-SKILLS
+# fde-skills
 
 현장 배치 엔지니어(Forward Deployed Engineer, FDE) 실전 워크플로우를 위한 에이전트 스킬 모음입니다.
 
@@ -13,7 +13,7 @@
 클론 후 아래 스크립트를 실행하면 `~/.agents/skills/`와 `~/.claude/skills/`에 각 스킬이 심볼릭 링크로 등록됩니다.
 
 ```bash
-git clone https://github.com/Dae-Jeong/FDE-SKILLS.git
-cd FDE-SKILLS
+git clone https://github.com/Dae-Jeong/fde-skills.git
+cd fde-skills
 ./scripts/install.sh
 ```
