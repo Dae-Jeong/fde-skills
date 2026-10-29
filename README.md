@@ -7,6 +7,7 @@
 | 스킬 이름 | 역할 요약 |
 | :--- | :--- |
 | [`fde-reverse-plan`](skills/fde-reverse-plan/SKILL.md) | **역산 계획서 (Spike-First Planning)** — 미팅록·요구사항 기반으로 현업 더티 데이터(80% 정상 + 20% 엣지케이스)를 먼저 합성하고, 끝까지 한 판(Spike)을 완주한 뒤 80:20 실현 가능성 구획과 복기형 계획서를 도출합니다. |
+| [`fde-work-log`](skills/fde-work-log/SKILL.md) | **야전 업무일지 변환 (Raw Diary ➔ Public Insight)** — 일기처럼 적은 하루 업무 메모에서 고객사 고유명사를 비식별화하고, 현업 규약과 엔지니어링 판단 중심의 기술 블로그 글(`fde-YYYY-MM-DD-<topic>.md`)로 변환합니다. |
 
 ## 설치 및 심볼릭 링크 연결
 
