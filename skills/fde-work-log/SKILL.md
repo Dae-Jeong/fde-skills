@@ -24,13 +24,13 @@ description: >
 
 ## 2. 2단계 기록 흐름
 
-### Stage 1. 야전 메모 누적 (Raw Note Capture)
-사용자가 업무 중 짧은 키워드나 감상을 던지면 즉시 글 초안을 부풀려 쓰지 않고, 핵심 사실만 구조화해 일자별 메모에 적재한다:
+### Stage 1. 야전 메모 누적 (`work-ops` 연동: `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md`)
+사용자가 업무 중 짧은 키워드나 감상을 던지면 즉시 글 초안을 부풀려 쓰지 않고, [`work-ops`](../work-ops/SKILL.md) 스킬과 연동해 `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md` 일자별 메모에 핵심 사실만 구조화해 적재한다:
 - **관찰한 현업 풍경 (Observation)**: 실무자가 실제로 어떻게 일하고 어디서 시간을 쓰는지
 - **숨은 규약 (Hidden Convention)**: 비효율처럼 보이지만 사고를 막고 있던 현장의 규칙
 - **FDE의 판단 (Decision & Action)**: 무엇을 자동화(80%)하고 무엇을 사람이 확인(20% 수리 어드민)하게 둘 것인지, 혹은 어떤 기술적 선택을 했는지
 
-### Stage 2. 블로그 아티클 변환 (`Dae-Jeong/app/fe/content/blog/`)
+### Stage 2. 비식별 블로그/자산 아티클 변환 (`fde-YYYY-MM-DD-<topic>.md`)
 메모가 하나의 완결된 인사이트로 모이면 아래 규격으로 초안(`published: false`)을 작성한다:
 - **파일명**: `fde-YYYY-MM-DD-<topic>.md` (`<topic>`은 영문 소문자 kebab-case)
 - **Frontmatter**:

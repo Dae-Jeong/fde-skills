@@ -1,6 +1,6 @@
+# OS & Editor
 .DS_Store
-__pycache__/
-*.pyc
-.venv/
-.env
-scratch/
+*.swp
+
+# Local-only credentials (NEVER commit real credentials to public repo)
+**/credentials.json
