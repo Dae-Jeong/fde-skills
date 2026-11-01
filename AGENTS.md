@@ -3,11 +3,12 @@
 이 저장소는 FDE(Forward Deployed Engineer) 파이프라인 스킬과 일일 업무/시각화 표준 스킬의 **단일 원장(Single Source of Truth)**이며, 로컬 비공개 Obsidian 볼트(`~/docsspace/`)와 결합해 동작한다:
 
 1. **Public 스킬 저장소 (`~/personalspace/fde-skills`)**:
-   - 모든 에이전트(`~/.agents/skills/`, `~/.claude/skills/`, `~/.gemini/config/skills/`)가 공유하는 7종 스킬(`fde-client-recon`, `service-explorer`, `fde-domain-simulator`, `fde-reverse-plan`, `fde-work-log`, `work-ops`, `diagram-renderer`)과 글로벌 룰([`configs/GEMINI.md`](configs/GEMINI.md))을 관리한다.
+   - 모든 에이전트(`~/.agents/skills/`, `~/.claude/skills/`, `~/.gemini/config/skills/`)가 공유하는 6종 스킬(`fde-client-recon`, `service-explorer`, `fde-domain-simulator`, `fde-reverse-plan`, `work-ops`, `diagram-renderer`)과 글로벌 룰([`configs/GEMINI.md`](configs/GEMINI.md))을 관리한다.
 2. **비공개 Obsidian 볼트 (`~/docsspace/`) — 2계층 Index 필수 규약**:
-   - **볼트 전체 마스터 목차 (`~/docsspace/00_INDEX.md`)**: 볼트 최상단에서 개인 업무 원장(`work-ops/`)과 모든 프로젝트 폴더(`<project-slug>/00_SSOT_INDEX.md`)를 연결하는 루트 목차다. 신규 프로젝트 폴더 생성 시 반드시 `00_INDEX.md`에 등록한다.
-   - **개인 업무 원장 (`~/docsspace/work-ops/`)**: 어느 작업 공간에서 세션을 열든 모든 할 일(`00_TODO.md`, `D+N` 오래된 순 정렬)과 일일 작업 로그(`01_Daily_Logs/YYYY-MM-DD.md`), 완료 아카이브(`99_Archive/`)는 무조건 이곳을 유일한 원장(SSOT)으로 참조·갱신한다.
-   - **프로젝트별 비공개 원장 (`~/docsspace/<project-slug>/`)**: 각 프로젝트 폴더 최상단에는 반드시 **`00_SSOT_INDEX.md`**(프로젝트 상세 목차)를 두고, `fde-client-recon` 정찰 리포트(`recon_private_overlay` 포함), `service-explorer` 웹 시스템 탐색 산출물(`explored-services/<service-slug>/`), `fde-domain-simulator` 시뮬레이션, `fde-reverse-plan` 역산 계획서를 모두 이 폴더 아래에 적재한 뒤 `00_SSOT_INDEX.md`를 즉시 갱신한다.
+   - **1계층 볼트 마스터 목차 (`~/docsspace/00_INDEX.md`)**: `~/docsspace/` 내 전체 폴더 목록(`work-ops/`, `<project-slug>/` 등), 각 폴더가 무엇을 관리하는지(1줄 요약), 그리고 각 폴더의 `00_SSOT_INDEX.md` 진입 링크를 관리한다. 신규 폴더 생성 시 즉시 갱신한다.
+   - **2계층 폴더별 상세 목차 (`~/docsspace/<folder>/00_SSOT_INDEX.md`)**: 모든 하위 폴더(`work-ops/` 및 모든 `<project-slug>/`)는 최상단에 `00_SSOT_INDEX.md`를 두고, 해당 폴더 내 파일/하위 폴더 목록과 각 파일이 담고 있는 핵심 내용을 요약해 관리한다. 파일이 추가·변경·삭제될 때마다 즉시 갱신한다(Update-on-Write).
+   - **개인 업무 원장 (`~/docsspace/work-ops/`)**: 어느 작업 공간에서 세션을 열든 모든 할 일(`00_TODO.md`, `D+N` 오래된 순 정렬), 일일 작업 및 FDE 현장 일지·회고(`01_Daily_Logs/YYYY-MM-DD.md`), 완료 아카이브(`99_Archive/`)는 무조건 이곳을 유일한 원장(SSOT)으로 참조·갱신한다.
+   - **프로젝트별 비공개 원장 (`~/docsspace/<project-slug>/`)**: `fde-client-recon` 정찰 리포트(`recon_private_overlay` 포함), `service-explorer` 웹 시스템 탐색 산출물(`explored-services/<service-slug>/`), `fde-domain-simulator` 시뮬레이션, `fde-reverse-plan` 역산 계획서를 모두 이 폴더 아래에 적재한 뒤 `00_SSOT_INDEX.md`를 즉시 갱신한다.
 
 ---
 
@@ -16,7 +17,7 @@
 1. **스킬 디렉토리 구조**:
    - 모든 개별 스킬은 `skills/<skill-name>/SKILL.md`에 위치하며 YAML frontmatter(`name`, `description`)를 포함한다.
    - 불필요한 Python 래퍼 스크립트 대신 에이전트 네이티브 도구(`read_file`, `edit_file`, `write_file`)와 `orca` CLI를 직접 호출하는 순수 지침(Instruction-First) 구조를 기본으로 한다.
-   - 신규 스킬 추가 또는 수정 후 `./scripts/install.sh`를 실행해 `~/.agents/skills/`, `~/.claude/skills/`, `~/.gemini/config/skills/` 심볼릭 링크 및 `~/.gemini/GEMINI.md` 글로벌 룰을 일괄 갱신한다.
+   - 신규 스킬 추가·수정·삭제 후 `./scripts/install.sh`를 실행해 `~/.agents/skills/`, `~/.claude/skills/`, `~/.gemini/config/skills/` 심볼릭 링크(죽은 링크 자동 정리 포함) 및 `~/.gemini/GEMINI.md` 글로벌 룰을 일괄 갱신한다.
 2. **보안 및 비식별화 (Public Repo Gate)**:
    - 이 저장소는 Public GitHub 저장소(`https://github.com/Dae-Jeong/fde-skills`)이므로 **고객사 실명, 도메인 URL, 대표자/담당자 실명, 고유 모델 코드, 실제 원본 데이터, 민감 단가, 로그인 자격증명(`credentials.json`)**을 절대 커밋하지 않는다.
    - `skills/service-explorer/credentials.json`은 `.gitignore`(`**/credentials.json`)로 원천 차단하며, 저장소에는 `credentials.example.json`만 유지한다.
@@ -30,9 +31,9 @@
 
 ### 1. 분리 vs 확장 판정 규칙 (Separation vs Extension Rule)
 
-새 스킬 디렉토리(`skills/<name>/`)는 **아래 두 조건을 모두 만족할 때만** 신설한다. 하나라도 아니면 기존 스킬의 Step이나 예시를 확장한다.
+새 스킬 디렉토리(`skills/<name>/`)는 **아래 두 조건을 모두 만족할 때만** 신설한다. 하나라도 아니면 기존 스킬의 Step이나 섹션을 확장한다.
 
-- **독립된 발화 시점(Trigger Timing)과 입력 상태**: 호출되는 시점(예: 첫 미팅 전 외부 URL만 있을 때 vs 데모/ERP 계정으로 실제 화면을 전수 탐색할 때 vs 도메인 스터디 시 vs 더티 데이터 Spike 시 vs 일일 업무 원장/회고 시)과 입력 아티팩트가 기존 스킬과 명확히 구별되는가?
+- **독립된 발화 시점(Trigger Timing)과 입력 상태**: 호출되는 시점(예: 첫 미팅 전 외부 URL만 있을 때 vs 데모/ERP 계정으로 실제 화면을 전수 탐색할 때 vs 도메인 스터디 시 vs 더티 데이터 Spike 시 vs 일일 업무 원장/야전 일지/회고 시)과 입력 아티팩트가 기존 스킬과 명확히 구별되는가?
 - **Upstream ➔ Downstream 구조화 핸드오프**: 앞 단계에서 넘겨받거나 다음 단계 스킬로 넘겨주는 **구조화된 핸드오프 시드(`*_handoff_seed` 또는 `99-cross-page-relations.md`)**가 정의되는가?
 
 ### 2. 작성 전 4대 정렬 질문 (4 Pre-Authoring Alignment Questions)
@@ -45,7 +46,7 @@
 3. **L1 / L2 / L3 해상도 & 양방향 모드 (`Distill` vs `Elaborate`)**:
    - **초급 `L1`** (30초 Executive Card, 6~8줄) ↔ **중급 `L2`** (미팅/실행 운영 시트 & 교차 매트릭스) ↔ **고급 `L3`** (풀스펙 도시에 & 포렌식 근거 원장 & YAML Seed)에서 각 슬롯의 해상도 파라미터만 어떻게 바꿀 것인가?
    - 초기 증거가 충분할 때의 **`Distill` 모드(`L3 ➔ L2 ➔ L1` 핵심 증류)**와 단서가 부족할 때의 **`Elaborate` 모드(`L1 v0 ➔ 타겟 수집 ➔ L2 ➔ L3/L3-pending ➔ L1 v1 역전파`)** 진입 기준은 무엇인가?
-4. **Upstream ➔ Downstream Handoff & Vault Index**: 앞 스킬의 어느 필드를 받아서 다음 스킬로 넘기며, 산출물을 `~/docsspace/<project-slug>/00_SSOT_INDEX.md`에 어떻게 등록하는가?
+4. **Upstream ➔ Downstream Handoff & Vault Index**: 앞 스킬의 어느 필드를 받아서 다음 스킬로 넘기며, 산출물을 `~/docsspace/<folder>/00_SSOT_INDEX.md`에 어떻게 등록하는가?
 
 ### 3. 6-Section 표준 `SKILL.md` 골격 (FDE 도메인 스킬 기준)
 
@@ -78,7 +79,7 @@ git grep -iE "<고객사실명>|<도메인키워드>|<대표자명>|<고유모�
 
 # Step 4. Git 상태 확인, 커밋 및 origin/main 푸시
 git status -sb
-git add .gitignore AGENTS.md README.md configs/ scripts/ skills/
+git add -A
 git commit -m "feat: <변경 요약>"
 git push origin main
 ```
