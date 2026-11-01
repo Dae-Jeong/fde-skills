@@ -1,6 +1,6 @@
 # Service Explorer Output Structure & Templates
 
-Store all exploration outputs in `./explored-services/<service-slug>/` (relative to the current workspace root, unless the user specifies another target directory).
+Store all exploration outputs in `~/docsspace/<project-slug>/explored-services/<service-slug>/` (inside the private Obsidian Vault `~/docsspace/`) and always register the entry in `~/docsspace/<project-slug>/00_SSOT_INDEX.md` and `~/docsspace/00_INDEX.md`.
 
 ## 1. Directory & File Structure
 

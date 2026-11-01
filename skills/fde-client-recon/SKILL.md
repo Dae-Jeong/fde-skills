@@ -328,7 +328,9 @@ recon_handoff_seed:
 
 ---
 
-## 산출물 표준 목차
+## 산출물 적재 위치 (`~/docsspace/<project-slug>/`) 및 표준 목차
+
+실제 고객사 정찰 리포트와 `recon_private_overlay`는 무조건 비공개 Obsidian 볼트인 **`~/docsspace/<project-slug>/`** 하위에 저장하며, 생성 즉시 **`~/docsspace/00_INDEX.md`**(볼트 전체 목차)와 **`~/docsspace/<project-slug>/00_SSOT_INDEX.md`**(프로젝트 상세 목차)에 문서 링크와 요약을 등록한다.
 
 1. **Step 0 헤더**: 확보 신호 인벤토리(N/6) · 합성 모드(`Distill` vs `Elaborate`) · 달성 해상도(`L1 | L2 | L3 | L2 (L3-pending)`)
 2. **초급(`L1`) — 30초 Executive Card**: 고정 슬롯 `A ➔ B ➔ C ➔ D` + 최우선 미확인(`U1, U2`) (6~8줄 카드)

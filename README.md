@@ -71,6 +71,52 @@ flowchart LR
 
 ---
 
+## 상황별 실전 프롬프트 플레이북 (Quick-Start Playbook)
+
+| 시점 / 상황 | 에이전트 호출 프롬프트 예시 | 작동 스킬 | 생성·갱신되는 원장 산출물 (`~/docsspace/`) |
+| :--- | :--- | :--- | :--- |
+| **D-3. 첫 미팅 전**<br>*(URL·회사명만 있을 때)* | `"https://... 고객사 사전 정찰해서 L1~L3 리포트랑 미팅 질문 뽑아줘"` | `fde-client-recon` | `~/docsspace/<project>/01_client_recon.md`<br>+ `<project>/00_SSOT_INDEX.md` 갱신 |
+| **D-2. 시스템 접근 확보**<br>*(데모/웹 ERP 계정 확보 시)* | `"이 웹 ERP 전수 탐색해서 화면별 명세랑 데이터 영향도 뽑고 아키파이로 시각화해줘"` | `service-explorer`<br>*(+ `archify`)* | `~/docsspace/<project>/explored-services/<slug>/`<br>(`00-sitemap-and-todo.md`, `99-cross-page-relations.md`, `pages/`, `visualizations/`) |
+| **D-1. 도메인 심층 해부**<br>*(미팅 시트 & 시뮬레이션)* | `"정찰 시드랑 ERP 탐색 결과 합쳐서 도메인 시뮬레이션 돌리고 A4 PDF 리포트 만들어줘"` | `fde-domain-simulator` | `~/docsspace/<project>/02_domain_simulation.md` (`.html` / `.pdf`) |
+| **D+1. 미팅 직후 제안/설계**<br>*(원본 데이터 수령 전)* | `"미팅 노트 기반으로 80:20 더티 데이터 Spike 먼저 돌리고 2주 역산 계획서 작성해줘"` | `fde-reverse-plan` | `~/docsspace/<project>/03_reverse_plan.md` |
+| **Daily. 업무 시작/종료**<br>*(할 일 점검·위임·회고)* | `"할 일 보여줘"` / `"이거 #ai 세션 띄워서 진행해"` / `"오늘 업무 로그 남기고 회고해줘"` | `work-ops` | `~/docsspace/work-ops/00_TODO.md`<br>`~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md` |
+| **Weekly. 기술 자산화**<br>*(야전 일지 블로그화)* | `"오늘 일일 로그에서 고객사 실명 빼고 비식별 엔지니어링 블로그 초안으로 변환해줘"` | `fde-work-log` | `~/docsspace/work-ops/02_Articles/fde-YYYY-MM-DD-<topic>.md` |
+
+---
+
+## 원장(SSOT) 구조 및 산출물 저장 위치 표준 (`~/docsspace/`)
+
+어느 작업 공간(`~/personalspace/*`)에서 에이전트 세션을 실행하든, **모든 문서·할 일·정찰·탐색 산출물의 유일한 원장(SSOT)은 `~/docsspace/`(비공개 Obsidian Vault)**이며 **2계층 목차(`00_INDEX.md` ➔ `<project-slug>/00_SSOT_INDEX.md`)**를 필수로 유지합니다.
+
+```text
+~/docsspace/                                     [비공개 Obsidian Vault 루트 — Git 공개 제외]
+├── 00_INDEX.md                                  ★ [1계층 루트 목차] 볼트 전체 프로젝트 & work-ops 마스터 목차
+├── work-ops/                                    ★ [개인 업무 원장]
+│   ├── 00_TODO.md                               (누적 할 일 — [created:: YYYY-MM-DD] 기준 D+N 오래된 순 정렬)
+│   ├── 01_Daily_Logs/YYYY-MM-DD.md              (일일 완료 작업 로그 및 일일 회고)
+│   ├── 02_Articles/fde-YYYY-MM-DD-<topic>.md    (fde-work-log 비식별 기술 아티클 초안)
+│   └── 99_Archive/Completed_YYYY-MM.md          (완료 후 7일 경과 항목 보관)
+│
+└── <project-slug>/                              ★ [고객사/프로젝트별 전용 원장 — 예: client-press/]
+    ├── 00_SSOT_INDEX.md                         ★ [2계층 프로젝트 목차] 해당 프로젝트 전 문서·탐색 링크 총괄
+    ├── 01~NN_<문서명>.md                        (사전 정찰, 현업/전산 분석, 도메인 시뮬레이션, 역산 계획서)
+    └── explored-services/<service-slug>/        (service-explorer 전수 탐색 산출물)
+        ├── 00-sitemap-and-todo.md
+        ├── 99-cross-page-relations.md
+        ├── pages/01~NN.md
+        ├── assets/screenshots/01~NN.jpg
+        └── visualizations/*.html
+```
+
+| 구분 | 저장 경로 | 목차(Index) 등록 의무 | GitHub (`fde-skills`) 커밋 여부 |
+| :--- | :--- | :--- | :--- |
+| **스킬 정의서 & 범용 가상 예시** | `~/personalspace/fde-skills/skills/` | `fde-skills/README.md` | **Public 커밋 O** *(비식별 프로필만)* |
+| **개인 할 일(To-Do) & 일일 로그** | `~/docsspace/work-ops/` | `~/docsspace/00_INDEX.md` | **커밋 금지 X** *(Private Vault)* |
+| **고객사 실명 정찰·시뮬레이션·계획서** | `~/docsspace/<project-slug>/` | `~/docsspace/00_INDEX.md` &<br>`<project-slug>/00_SSOT_INDEX.md` | **커밋 금지 X** *(Private Vault)* |
+| **고객사 웹 ERP/서비스 탐색 & 캡처** | `~/docsspace/<project-slug>/explored-services/` | `<project-slug>/00_SSOT_INDEX.md` | **커밋 금지 X** *(Private Vault)* |
+
+---
+
 ## 시작하기 및 설치 (Getting Started)
 
 ### 필요 환경 (Prerequisites)
@@ -79,11 +125,12 @@ flowchart LR
 - `SKILL.md` 규격을 지원하는 AI 코딩 에이전트 (`~/.agents/skills/`, `~/.claude/skills/`, `~/.gemini/config/skills/` 경로 참조)
 - `service-explorer` 실행 시 Orca 내장 브라우저 (`orca` CLI) 및 Archify (`~/.agents/skills/archify`, Node.js)
 
-### 설치 및 심볼릭 링크 일괄 등록
+### 설치 및 원클릭 부트스트랩
 
 저장소를 클론한 뒤 [`scripts/install.sh`](scripts/install.sh)를 실행하면:
-1. `~/.agents/skills/`, `~/.claude/skills/`, `~/.gemini/config/skills/` 3곳 모두에 스킬 심볼릭 링크가 자동 연결됩니다.
-2. `skills/service-explorer/credentials.json`(`chmod 600`, Git 추적 제외)과 `~/docsspace/work-ops/` 원장 디렉토리가 자동 초기화됩니다.
+1. `~/.agents/skills/`, `~/.claude/skills/`, `~/.gemini/config/skills/` 3곳 모두에 7종 스킬 심볼릭 링크가 자동 연결됩니다.
+2. 글로벌 룰([`configs/GEMINI.md`](configs/GEMINI.md) ➔ `~/.gemini/GEMINI.md`)이 자동 동기화됩니다.
+3. `skills/service-explorer/credentials.json`(`chmod 600`, Git 추적 제외)과 `~/docsspace/00_INDEX.md` 및 `~/docsspace/work-ops/00_TODO.md` 원장 구조가 자동 초기화됩니다.
 
 ```bash
 git clone https://github.com/Dae-Jeong/fde-skills.git ~/personalspace/fde-skills
@@ -99,9 +146,11 @@ cd ~/personalspace/fde-skills
 fde-skills/
 ├── .gitignore                        # 로컬 자격증명(**/credentials.json) 및 OS 임시파일 커밋 차단
 ├── AGENTS.md                         # 저장소/볼트 이원화 구조 및 4-Part 스킬 작성·보안 규칙
-├── README.md                         # 프로젝트 개요 및 7종 스킬 파이프라인 가이드
+├── README.md                         # 프로젝트 개요, 실전 플레이북 및 7종 스킬 파이프라인 가이드
+├── configs/
+│   └── GEMINI.md                     # 글로벌 에이전트 원칙 및 ~/docsspace/ 원장·목차 강제 룰
 ├── scripts/
-│   └── install.sh                    # ~/.agents, ~/.claude, ~/.gemini 심볼릭 링크 및 work-ops 원장 초기화
+│   └── install.sh                    # 3대 에이전트 심볼릭 링크, GEMINI.md 및 docsspace 원장 초기화
 └── skills/
     ├── fde-client-recon/
     │   └── SKILL.md                  # Stage 1: 양방향 3단계(L1↔L2↔L3) OSINT 고객사 사전 정찰
@@ -147,4 +196,4 @@ fde-skills/
 
 1. **실명·고유명사·자격증명 커밋 금지**: 실제 고객사 법인명, 도메인 URL, 대표자/담당자 실명, 고유 모델 번호, 실제 원본 데이터, 그리고 `service-explorer`의 실제 로그인 정보(`credentials.json`)는 절대 커밋하지 않습니다.
 2. **비식별 아키텍처 프로필 사용**: 모든 예시는 `"수주 설계형 대형 프레스/설비 제조사(가상, ETO)"`, `"반복 양산형 부품 제조사(가상, MTS/MTO)"` 형태의 일반화된 아키텍처 프로필로만 기술합니다.
-3. **공개 Seed와 비공개 Vault Overlay 분리**: 실제 고객사 정찰 시 민감 식별 맥락과 실제 서비스 탐색 산출물은 로컬 비공개 볼트(`~/docsspace/<project>/`)에만 보관하고, 공개 저장소에는 비식별 `recon_handoff_seed`와 범용 스킬 규격만 커밋합니다.
+3. **공개 Seed와 비공개 Vault Overlay 분리**: 실제 고객사 정찰 시 민감 식별 맥락과 실제 서비스 탐색 산출물은 로컬 비공개 볼트(`~/docsspace/<project-slug>/`)에만 보관하고, 공개 저장소에는 비식별 `recon_handoff_seed`와 범용 스킬 규격만 커밋합니다.

@@ -90,6 +90,7 @@ FDE 사전 준비 3단 파이프라인에서 이 스킬은 2단계다:
 | `theory_baseline` | **Layer 4**: Stage별 정통 이론 선택 및 현장 붕괴 지점 대조의 기준선으로 사용한다. |
 | `dirty_data_hints`, `automation_candidate_hints` | **Layer 5**: 80:20 Auto/Repair 구획 확정 및 `fde-reverse-plan`용 Dirty Data Seed(합성 레코드) 생성의 직접 원천으로 사용한다. |
 | `meeting_questions` (`Q#`, `target_hypothesis: H#`, `branch_if_yes/no`), `open_unknowns` (`U#`) | **실행 절차 7 & 매트릭스 빈 칸**: `U#`은 20칸 매트릭스의 미확인 셀로 표시하고, `Q#` 분기 트리를 시뮬레이션 질문 목록과 통합한다. |
+| **`service-explorer` 산출물** (`00-sitemap-and-todo.md`, `pages/*.md`, `99-cross-page-relations.md`) | **Layer 1 & Layer 3 `[recon_evidence: Direct]`**: 데모/웹 ERP 탐색 결과가 존재할 경우, 실제 메뉴·화면 흐름과 화면 간 데이터 생성➔소비 관계를 **Layer 1 공식 시스템 레인**에 그대로 주입하고, 테이블/필터 컬럼명을 **Layer 3 Tier 1 스키마 용어**로 직결한다. |
 
 ### 매트릭스 셀 출처 3분류 규칙 (Provenance Tagging)
 
@@ -138,7 +139,9 @@ FDE 사전 준비 3단 파이프라인에서 이 스킬은 2단계다:
 
 ---
 
-## 산출물 표준 목차
+## 산출물 적재 위치 (`~/docsspace/<project-slug>/`) 및 표준 목차
+
+고객사/프로젝트 대상 도메인 시뮬레이션 산출물(`.md`, `.html`, `.pdf`)은 **`~/docsspace/<project-slug>/`** 하위에 적재하고 **`~/docsspace/<project-slug>/00_SSOT_INDEX.md`** 및 **`~/docsspace/00_INDEX.md`** 목차에 등록한다. (단, 특정 고객사와 무관한 일반화된 비식별 아키텍처 레퍼런스 예시는 `fde-skills/skills/fde-domain-simulator/examples/`에 커밋할 수 있다.)
 
 1. 도메인 개요 및 범위 (가상 업체 프로필 + Recon Seed 해상도/모드 메타데이터)
 2. 매크로 아키텍처 Flow 다이어그램 (공식 시스템 레인 vs Shadow IT 레인, 동기화/단절 지점 표시)

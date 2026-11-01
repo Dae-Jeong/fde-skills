@@ -60,22 +60,24 @@ Before creating output files, read [output_templates.md](./references/output_tem
        2. When the user provides credentials, read existing `~/.agents/skills/service-explorer/credentials.json` (or initialize `{"services": {}}` if missing/corrupted), merge the new entry under `services["<service_name_or_host>"]`, write the file, and run `chmod 600 ~/.agents/skills/service-explorer/credentials.json`.
        3. Perform the login steps in Case A.
 
-## 1. Output Directory Layout
+## 1. Output Directory Layout & Vault Index Registration (`~/docsspace/<project-slug>/`)
 
-Persist all exploration artifacts incrementally under `./explored-services/<service-slug>/` (in the current workspace or private vault folder `~/docsspace/<project>/explored-services/<service-slug>/`, never inside the public `fde-skills` repo for real client systems):
+Persist all exploration artifacts incrementally under `~/docsspace/<project-slug>/explored-services/<service-slug>/` (inside the private Obsidian Vault `~/docsspace/`, never inside the public `fde-skills` repo). After creating or updating the exploration report, **always register/update the link in `~/docsspace/<project-slug>/00_SSOT_INDEX.md` and `~/docsspace/00_INDEX.md`**:
 
 ```text
-explored-services/<service-slug>/
-├── 00-sitemap-and-todo.md         # Master index: Site Map + Coverage To-Do Checklist
-├── 99-cross-page-relations.md     # Service-wide Data Lineage & Producer->Consumer Impact Matrix
-├── pages/
-│   └── <NN>-<page-slug>.md        # Per-page spec (purpose, views, inputs, CTAs, upstream/downstream links)
-├── assets/
-│   └── screenshots/
-│       └── <NN>-<page-slug>.jpg   # Visual capture paired 1:1 with each page spec
-└── visualizations/                # [Optional: Option --archify] Standalone interactive HTML via Archify
-    ├── service-architecture.html
-    └── cross-page-dataflow.html
+~/docsspace/<project-slug>/
+├── 00_SSOT_INDEX.md               # Project Master Index (must link 00-sitemap-and-todo.md & 99-cross-page-relations.md)
+└── explored-services/<service-slug>/
+    ├── 00-sitemap-and-todo.md     # Master index: Site Map + Coverage To-Do Checklist
+    ├── 99-cross-page-relations.md # Service-wide Data Lineage & Producer->Consumer Impact Matrix
+    ├── pages/
+    │   └── <NN>-<page-slug>.md    # Per-page spec (purpose, views, inputs, CTAs, upstream/downstream links)
+    ├── assets/
+    │   └── screenshots/
+    │       └── <NN>-<page-slug>.jpg # Visual capture paired 1:1 with each page spec
+    └── visualizations/            # [Optional: Option --archify] Standalone interactive HTML via Archify
+        ├── service-architecture.html
+        └── cross-page-dataflow.html
 ```
 
 ## 2. Sequential Exploration Workflow (Steps 1–6)
