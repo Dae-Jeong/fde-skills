@@ -30,9 +30,12 @@ Logging is a supporting record, not the primary task. Rather than interrupting t
   1. **Decision / Alignment Confirmed**: A key design, architecture, or operational direction is agreed upon with the user.
   2. **Analysis / Recon Milestone**: Significant insights, domain findings, root causes, or document/data synthesis conclusions are reached mid-task.
   3. **Artifact / Task Completion**: A major deliverable (recon report, service map, domain simulation, reverse plan, code change, or git commit/push) is completed.
-- **How to Delegate (Non-Blocking Subagent)**:
-  - Invoke a lightweight background subagent (`invoke_subagent` with `TypeName: "self"`, `Model: "flash"`, `Role: "Work-Ops Logger"`) passing the concise context of what was decided/analyzed/completed, its core rationale (`Why`), and any touched files.
-  - The main agent continues its primary conversation/task immediately without waiting or polling.
+- **How to Delegate (Agent-Agnostic Non-Blocking Subagent)**:
+  - Delegate to a background subagent using the current runtime's native subagent tool and its default/inherited model (do not hardcode vendor-specific model names):
+    - **Antigravity (`agy`)**: `invoke_subagent` (`TypeName: "self"`, `Role: "Work-Ops Logger"`, default `Model: "inherit"`)
+    - **Claude Code (`claude`)**: `Task` / subagent tool (`run_in_background: true`)
+    - **Codex (`codex`) / Other**: Native background subagent tool if available, or perform a direct non-blocking update at the checkpoint boundary.
+  - Pass the concise context of what was decided/analyzed/completed, its core rationale (`Why`), and any touched files. The main agent continues its primary conversation/task immediately without waiting or polling.
 - **Subagent Logging Format**:
   1. Append to `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md` under `## Log` (if creating a new `YYYY-MM-DD.md` file, immediately register it in `~/docsspace/work-ops/00_SSOT_INDEX.md`):
      - **For general engineering / analysis / decision checkpoints**:
