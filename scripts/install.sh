@@ -123,3 +123,73 @@ for aux_path in "${HOME}/.agents/skills"/*; do
     done
   fi
 done
+
+# 6. Configure Work-Ops Lifecycle Hooks (Session Briefing + Checkpoint Auto-Logging Trigger)
+HOOK_SCRIPT="${REPO_ROOT}/scripts/work-ops-hook.py"
+chmod +x "${HOOK_SCRIPT}"
+
+python3 - "${HOOK_SCRIPT}" <<'PYEOF'
+import json
+import os
+import sys
+
+hook_script = sys.argv[1]
+
+# 6-1. Antigravity (~/.gemini/config/hooks.json)
+gemini_hooks_path = os.path.expanduser("~/.gemini/config/hooks.json")
+os.makedirs(os.path.dirname(gemini_hooks_path), exist_ok=True)
+try:
+    with open(gemini_hooks_path, encoding="utf-8") as f:
+        g_hooks = json.load(f)
+except Exception:
+    g_hooks = {}
+
+g_hooks["work-ops-session-briefing"] = {
+    "PreInvocation": [
+        {
+            "type": "command",
+            "command": f"python3 '{hook_script}' pre",
+            "timeout": 5,
+        }
+    ],
+    "PostInvocation": [
+        {
+            "type": "command",
+            "command": f"python3 '{hook_script}' post",
+            "timeout": 5,
+        }
+    ],
+}
+
+with open(gemini_hooks_path, "w", encoding="utf-8") as f:
+    json.dump(g_hooks, f, ensure_ascii=False, indent=2)
+    f.write("\n")
+
+# 6-2. Claude Code (~/.claude/settings.json)
+claude_settings_path = os.path.expanduser("~/.claude/settings.json")
+os.makedirs(os.path.dirname(claude_settings_path), exist_ok=True)
+try:
+    with open(claude_settings_path, encoding="utf-8") as f:
+        c_settings = json.load(f)
+except Exception:
+    c_settings = {}
+
+c_settings.setdefault("hooks", {})
+c_settings["hooks"]["SessionStart"] = [
+    {
+        "matcher": "*",
+        "hooks": [
+            {
+                "type": "command",
+                "command": f"python3 '{hook_script}' claude-session",
+            }
+        ],
+    }
+]
+
+with open(claude_settings_path, "w", encoding="utf-8") as f:
+    json.dump(c_settings, f, ensure_ascii=False, indent=2)
+    f.write("\n")
+
+print(f"Synced Work-Ops hooks -> {gemini_hooks_path} & {claude_settings_path}")
+PYEOF
