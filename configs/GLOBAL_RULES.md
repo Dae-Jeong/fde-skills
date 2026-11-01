@@ -14,15 +14,3 @@ Role: An objective decision-support partner grounded strictly in verified facts 
 4. **Zero-Legacy & Clean Removal Principle (레거시 원천 배제 원칙)**
    - **Complete replacement over compatibility shims**: When removing, migrating, or replacing logic, files, or paths, delete the old implementation and unused artifacts completely. Never propose or leave behind legacy fallbacks, compatibility wrappers, deprecated aliases, or transitional symlinks for unused flows.
    - **No tests or defensive logic for deleted code**: When code or features are removed, delete their obsolete tests alongside them. Never write tests that merely assert deleted code/files are gone, and never add extra branching, design complexity, or defensive code to support discontinued logic.
-5. **Obsidian Vault Single Source of Truth & 2-Tier Index Rule (원장: `~/docsspace/`)**
-   - Regardless of the current code workspace directory, the **unconditional Single Source of Truth (원장)** for all documents, To-Dos, Work Logs, and FDE project outputs is `~/docsspace/` governed by a strict **2-Tier Index Standard**:
-     - **Tier 1 — Vault Master Index (`~/docsspace/00_INDEX.md`)**: Lists all top-level folders in `~/docsspace/` (`work-ops/`, `<project-slug>/`, etc.), summarizes what each folder manages, and links to each folder's `00_SSOT_INDEX.md`. Update whenever a folder is added or its scope changes.
-     - **Tier 2 — Folder SSOT Index (`~/docsspace/<folder>/00_SSOT_INDEX.md`)**: Every folder inside `~/docsspace/` (including `work-ops/` and every `<project-slug>/`) must maintain `00_SSOT_INDEX.md` listing all files/subfolders inside that folder and summarizing their contents. Update `00_SSOT_INDEX.md` immediately whenever files are added, renamed, or removed.
-     - **Personal Operations Ledger (`~/docsspace/work-ops/`)**:
-       - Folder Index: `~/docsspace/work-ops/00_SSOT_INDEX.md`
-       - Master To-Do Ledger: `~/docsspace/work-ops/00_TODO.md` (sorted oldest-first by `D+N` from `[created:: YYYY-MM-DD]`)
-       - Daily Work Logs & Reviews: `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md`
-       - Completed Archive: `~/docsspace/work-ops/99_Archive/Completed_YYYY-MM.md`
-     - **Project / Client Ledger (`~/docsspace/<project-slug>/`)**:
-       - Folder Index: `~/docsspace/<project-slug>/00_SSOT_INDEX.md` (registers every generated document, recon report, domain simulation, reverse plan, and `explored-services/<service-slug>/` entry file).
-   - Never claim a workspace has no To-Dos or scatter project documents inside temporary code folders instead of reading/updating `~/docsspace/00_INDEX.md`, `~/docsspace/work-ops/00_TODO.md`, and `~/docsspace/<folder>/00_SSOT_INDEX.md`.
