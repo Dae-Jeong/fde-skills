@@ -350,3 +350,4 @@ recon_handoff_seed:
 - [ ] **아키텍처 + 보조축 판정**: 관리 키 · BOM 생애주기 · A/S 프로세스 · 채용 공고 4대 기준으로 주 아키텍처(`MTS/ATO/MTO/ETO`)와 보조축(`ATO/MRO`)을 판별했다.
 - [ ] **반증 조건 및 대안 해석**: 모든 핵심 가설(`H#`)에 출처 3분류(`Direct | Inferred | Archetype Prior`), 반증 조건(`falsifier`), 대안 해석(`alternatives`)이 붙어 있다.
 - [ ] **공개/비공개 완벽 분리**: `recon_handoff_seed` 본문과 공개 산출물에 고객사 실명 · 도메인 · 대표자명 · 성향 별칭 · 고유 모델명이 전혀 없으며(`grep` 검증 0건), 실명 맥락은 볼트 전용 `recon_private_overlay`로 분리되었다.
+- [ ] **Work-Ops 일지 및 목차 동기화**: 단계별 중간 마일스톤(Step 0 모드/아키텍처 판정 등) 및 최종 정찰 산출물 적재 시 `~/docsspace/<project-slug>/00_SSOT_INDEX.md`와 `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md`를 즉시 갱신했다.

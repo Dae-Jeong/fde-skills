@@ -62,7 +62,7 @@ Before creating output files, read [output_templates.md](./references/output_tem
 
 ## 1. Output Directory Layout & Vault Index Registration (`~/docsspace/<project-slug>/`)
 
-Persist all exploration artifacts incrementally under `~/docsspace/<project-slug>/explored-services/<service-slug>/` (inside the private Obsidian Vault `~/docsspace/`, never inside the public `fde-skills` repo). After creating or updating the exploration report, **always register/update the link in `~/docsspace/<project-slug>/00_SSOT_INDEX.md` and `~/docsspace/00_INDEX.md`**:
+Persist all exploration artifacts incrementally under `~/docsspace/<project-slug>/explored-services/<service-slug>/` (inside the private Obsidian Vault `~/docsspace/`, never inside the public `fde-skills` repo). At key mid-exploration milestones (e.g., initial Site Map built in Step 1, major module group completed, `99-cross-page-relations.md` synthesized in Step 6, or Archify visualizations generated) and upon completion, **always register/update the link in `~/docsspace/<project-slug>/00_SSOT_INDEX.md`, `~/docsspace/00_INDEX.md`, and append a checkpoint entry to `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md`**:
 
 ```text
 ~/docsspace/<project-slug>/

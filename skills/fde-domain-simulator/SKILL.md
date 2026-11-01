@@ -141,7 +141,7 @@ FDE 사전 준비 3단 파이프라인에서 이 스킬은 2단계다:
 
 ## 산출물 적재 위치 (`~/docsspace/<project-slug>/`) 및 표준 목차
 
-고객사/프로젝트 대상 도메인 시뮬레이션 산출물(`.md`, `.html`, `.pdf`)은 **`~/docsspace/<project-slug>/`** 하위에 적재하고 **`~/docsspace/<project-slug>/00_SSOT_INDEX.md`** 및 **`~/docsspace/00_INDEX.md`** 목차에 등록한다. (단, 특정 고객사와 무관한 일반화된 비식별 아키텍처 레퍼런스 예시는 `fde-skills/skills/fde-domain-simulator/examples/`에 커밋할 수 있다.)
+고객사/프로젝트 대상 도메인 시뮬레이션 산출물(`.md`, `.html`, `.pdf`)은 **`~/docsspace/<project-slug>/`** 하위에 적재하고 **`~/docsspace/<project-slug>/00_SSOT_INDEX.md`**, **`~/docsspace/00_INDEX.md`** 목차 및 **`~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md`**(중간 매트릭스 완성·HTML/PDF 렌더링 완료 체크포인트 포함)에 즉시 기록한다. (단, 특정 고객사와 무관한 일반화된 비식별 아키텍처 레퍼런스 예시는 `fde-skills/skills/fde-domain-simulator/examples/`에 커밋할 수 있다.)
 
 1. 도메인 개요 및 범위 (가상 업체 프로필 + Recon Seed 해상도/모드 메타데이터)
 2. 매크로 아키텍처 Flow 다이어그램 (공식 시스템 레인 vs Shadow IT 레인, 동기화/단절 지점 표시)

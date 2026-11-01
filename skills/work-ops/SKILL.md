@@ -24,24 +24,29 @@ Operate directly on the Markdown files in `~/docsspace/work-ops/` (the unconditi
 - **Add**: Edit `00_TODO.md` to add `- [ ] <Task> [created:: YYYY-MM-DD]` under `## Todo` (or under `## Waiting` with `[waiting:: <who>]`). Append `#ai` if the AI can execute the task autonomously.
 - **AI Delegation**: Highlight `#ai` / AI-executable tasks and ask the user for approval. Only after explicit user approval, mark the item `[/]` in `00_TODO.md` and launch a separate session (`invoke_subagent` with `TypeName: "self"` or `orca agent launch`).
 
-## 2. Log Completed Work & FDE Field Notes (`01_Daily_Logs/YYYY-MM-DD.md`)
-When a meaningful task completes, or when the user drops daily field notes/reflections:
-1. Append to `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md` under `## Log` (if creating a new `YYYY-MM-DD.md` file, immediately register it in `~/docsspace/work-ops/00_SSOT_INDEX.md`):
-   - **For general engineering / setup tasks**:
-     ```markdown
-     - **[HH:MM] <Title>** (`[[<project-or-workspace>]]`)
-       - Why: <Core rationale and outcome>
-       - Files: <Key files created/modified>
-     ```
-   - **For FDE client / field observations (do not inflate into a full essay yet; capture structured facts)**:
-     ```markdown
-     - **[HH:MM] <Title>** (`[[<project-or-workspace>]]`)
-       - Observation (관찰한 현업 풍경): <How operators actually work and where time/friction is spent>
-       - Hidden Convention (숨은 규약): <Why the seemingly inefficient field rule existed to prevent accidents>
-       - Decision & Action (FDE 80:20 판단): <What to automate (80% Auto) vs keep in human review (20% Repair Admin)>
-       - Files: <Key files created/modified, if any>
-     ```
-2. If the task matches an item in `00_TODO.md`, move that item to `## Done` as `- [x] <Task> [created:: YYYY-MM-DD] [done:: [[YYYY-MM-DD]]]`.
+## 2. Continuous Checkpoint & Task-Completion Logging (`01_Daily_Logs/YYYY-MM-DD.md`)
+Do not wait only for final session completion or explicit user requests. Trigger logging **both during work (at meaningful mid-task checkpoints) and upon task completion**:
+- **Auto-Logging Triggers**:
+  1. **Task Start / Delegation**: Mark the corresponding item `[/]` in `00_TODO.md` when starting a multi-step task.
+  2. **Mid-Task Checkpoints (중간 체크포인트 로깅)**: Whenever an important intermediate milestone is reached (e.g., architectural/design decision confirmed, root cause or key field constraint discovered, major skill/code/report artifact written, spike/verification passed), immediately append a checkpoint entry to `01_Daily_Logs/YYYY-MM-DD.md`.
+  3. **Task Completion / Git Commit & Push**: When a task or pipeline stage finishes, append the final outcome entry and update `00_TODO.md` (`[x]`).
+- **Logging Procedure**:
+  1. Append to `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md` under `## Log` (if creating a new `YYYY-MM-DD.md` file, immediately register it in `~/docsspace/work-ops/00_SSOT_INDEX.md`):
+     - **For general engineering / setup / milestone checkpoints**:
+       ```markdown
+       - **[HH:MM] <Title>** (`[[<project-or-workspace>]]`)
+         - Why: <Core rationale, decision, or checkpoint outcome>
+         - Files: <Key files created/modified>
+       ```
+     - **For FDE client / field observations (do not inflate into a full essay yet; capture structured facts)**:
+       ```markdown
+       - **[HH:MM] <Title>** (`[[<project-or-workspace>]]`)
+         - Observation (관찰한 현업 풍경): <How operators actually work and where time/friction is spent>
+         - Hidden Convention (숨은 규약): <Why the seemingly inefficient field rule existed to prevent accidents>
+         - Decision & Action (FDE 80:20 판단): <What to automate (80% Auto) vs keep in human review (20% Repair Admin)>
+         - Files: <Key files created/modified, if any>
+       ```
+  2. If the completed task matches an item in `00_TODO.md`, move that item to `## Done` as `- [x] <Task> [created:: YYYY-MM-DD] [done:: [[YYYY-MM-DD]]]`.
 
 ## 3. Daily Work Review (`## Review`)
 Read `00_TODO.md` and `01_Daily_Logs/YYYY-MM-DD.md` to review and save under `## Review` in `01_Daily_Logs/YYYY-MM-DD.md`:

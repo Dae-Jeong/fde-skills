@@ -46,7 +46,7 @@ description: >
 Step 3에서 실제로 돌아간 파이프라인과 엣지케이스 분기 결과를 역산하여 계획서/제안서를 작성한다.
 
 #### 산출물 적재 위치 (`~/docsspace/<project-slug>/`) 및 표준 목차
-작성된 역산 계획서와 Spike 시뮬레이션 결과는 무조건 **`~/docsspace/<project-slug>/`** 하위에 저장하고, **`~/docsspace/<project-slug>/00_SSOT_INDEX.md`** 및 **`~/docsspace/00_INDEX.md`** 목차에 등록한다.
+작성된 역산 계획서와 Spike 시뮬레이션 결과는 무조건 **`~/docsspace/<project-slug>/`** 하위에 저장하고, **`~/docsspace/<project-slug>/00_SSOT_INDEX.md`**, **`~/docsspace/00_INDEX.md`** 목차 및 **`~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md`**(Step 3 더티 데이터 Spike 완주 체크포인트 및 Step 4 계획서 완료 시점 포함)에 즉시 등록한다.
 
 1. **문제 정의 및 목표 (R1 ➔ R2 Gap)**
    - 현업 병목 구간과 핵심 성과 지표(Y)
