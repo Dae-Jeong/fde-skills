@@ -8,6 +8,7 @@ CONFIGS_DIR="${REPO_ROOT}/configs"
 TARGET_DIRS=(
   "${HOME}/.agents/skills"
   "${HOME}/.claude/skills"
+  "${HOME}/.codex/skills"
   "${HOME}/.gemini/config/skills"
 )
 
@@ -80,14 +81,18 @@ EOF
   echo "Initialized SSOT ledger: ${WORK_OPS_DIR}/00_TODO.md"
 fi
 
-# 3. Sync global root rules (~/.gemini/GEMINI.md)
-if [ -f "${CONFIGS_DIR}/GEMINI.md" ]; then
-  mkdir -p "${HOME}/.gemini"
-  cp "${CONFIGS_DIR}/GEMINI.md" "${HOME}/.gemini/GEMINI.md"
-  echo "Synced global rules: ${HOME}/.gemini/GEMINI.md"
+# 3. Sync global root rules across Gemini (~/.gemini/GEMINI.md), Claude (~/.claude/CLAUDE.md), and Codex (~/.codex/AGENTS.md & ~/.agents/AGENTS.md)
+RULE_SRC="${CONFIGS_DIR}/GLOBAL_RULES.md"
+if [ -f "${RULE_SRC}" ]; then
+  mkdir -p "${HOME}/.gemini" "${HOME}/.claude" "${HOME}/.codex" "${HOME}/.agents"
+  ln -sfn "${RULE_SRC}" "${HOME}/.gemini/GEMINI.md"
+  ln -sfn "${RULE_SRC}" "${HOME}/.claude/CLAUDE.md"
+  ln -sfn "${RULE_SRC}" "${HOME}/.codex/AGENTS.md"
+  ln -sfn "${RULE_SRC}" "${HOME}/.agents/AGENTS.md"
+  echo "Linked global rules (GEMINI.md / CLAUDE.md / AGENTS.md) -> ${RULE_SRC}"
 fi
 
-# 4. Prune broken symlinks and link all skills from fde-skills/skills/* into ~/.agents, ~/.claude, and ~/.gemini
+# 4. Prune broken symlinks and link all skills from fde-skills/skills/* into ~/.agents, ~/.claude, ~/.codex, and ~/.gemini
 for target_base in "${TARGET_DIRS[@]}"; do
   mkdir -p "${target_base}"
   for existing in "${target_base}"/*; do
@@ -108,12 +113,12 @@ for target_base in "${TARGET_DIRS[@]}"; do
   done
 done
 
-# 5. Sync auxiliary skills in ~/.agents/skills (e.g., archify, orca-cli) to ~/.claude and ~/.gemini
+# 5. Sync auxiliary skills in ~/.agents/skills (e.g., archify, orca-cli) to ~/.claude, ~/.codex, and ~/.gemini
 for aux_path in "${HOME}/.agents/skills"/*; do
   [ -e "${aux_path}" ] || continue
   aux_name="$(basename "${aux_path}")"
   if [ ! -d "${SKILLS_DIR}/${aux_name}" ]; then
-    for extra_base in "${HOME}/.claude/skills" "${HOME}/.gemini/config/skills"; do
+    for extra_base in "${HOME}/.claude/skills" "${HOME}/.codex/skills" "${HOME}/.gemini/config/skills"; do
       ln -sfn "${aux_path}" "${extra_base}/${aux_name}"
     done
   fi

@@ -119,8 +119,8 @@ flowchart LR
 ### 설치 및 원클릭 부트스트랩
 
 저장소를 클론한 뒤 [`scripts/install.sh`](scripts/install.sh)를 실행하면:
-1. `~/.agents/skills/`, `~/.claude/skills/`, `~/.gemini/config/skills/` 3곳 모두에 6종 스킬 심볼릭 링크가 자동 연결됩니다(죽은 심볼릭 링크 자동 제거 포함).
-2. 글로벌 룰([`configs/GEMINI.md`](configs/GEMINI.md) ➔ `~/.gemini/GEMINI.md`)이 자동 동기화됩니다.
+1. `~/.agents/skills/`, `~/.claude/skills/`, `~/.codex/skills/`, `~/.gemini/config/skills/` 4곳 모두에 6종 스킬 심볼릭 링크가 자동 연결됩니다(죽은 심볼릭 링크 자동 제거 포함).
+2. 멀티 에이전트 공통 글로벌 룰([`configs/GLOBAL_RULES.md`](configs/GLOBAL_RULES.md))이 **Gemini(`~/.gemini/GEMINI.md`) · Claude(`~/.claude/CLAUDE.md`) · Codex(`~/.codex/AGENTS.md` 및 `~/.agents/AGENTS.md`)**에 모두 심볼릭 링크로 자동 동기화됩니다.
 3. `skills/service-explorer/credentials.json`(`chmod 600`, Git 추적 제외)과 `~/docsspace/00_INDEX.md` 및 `~/docsspace/work-ops/00_SSOT_INDEX.md`, `00_TODO.md` 원장 구조가 자동 초기화됩니다.
 
 ```bash
@@ -139,7 +139,7 @@ fde-skills/
 ├── AGENTS.md                         # 저장소/볼트 이원화 구조 및 4-Part 스킬 작성·보안 규칙
 ├── README.md                         # 프로젝트 개요, 실전 플레이북 및 6종 스킬 파이프라인 가이드
 ├── configs/
-│   └── GEMINI.md                     # 글로벌 에이전트 원칙 및 ~/docsspace/ 2계층 Index 강제 룰
+│   └── GLOBAL_RULES.md               # Gemini(GEMINI.md)·Claude(CLAUDE.md)·Codex(AGENTS.md) 공통 글로벌 룰
 ├── scripts/
 │   └── install.sh                    # 3대 에이전트 심볼릭 링크, GEMINI.md 및 docsspace 원장 초기화
 └── skills/
