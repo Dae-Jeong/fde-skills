@@ -24,19 +24,22 @@ Operate directly on the Markdown files in `~/docsspace/work-ops/` (the unconditi
 - **Add**: Edit `00_TODO.md` to add `- [ ] <Task> [created:: YYYY-MM-DD]` under `## Todo` (or under `## Waiting` with `[waiting:: <who>]`). Append `#ai` if the AI can execute the task autonomously.
 - **AI Delegation**: Highlight `#ai` / AI-executable tasks and ask the user for approval. Only after explicit user approval, mark the item `[/]` in `00_TODO.md` and launch a separate session (`invoke_subagent` with `TypeName: "self"` or `orca agent launch`).
 
-## 2. Continuous Checkpoint & Task-Completion Logging (`01_Daily_Logs/YYYY-MM-DD.md`)
-Do not wait only for final session completion or explicit user requests. Trigger logging **both during work (at meaningful mid-task checkpoints) and upon task completion**:
-- **Auto-Logging Triggers**:
-  1. **Task Start / Delegation**: Mark the corresponding item `[/]` in `00_TODO.md` when starting a multi-step task.
-  2. **Mid-Task Checkpoints (중간 체크포인트 로깅)**: Whenever an important intermediate milestone is reached (e.g., architectural/design decision confirmed, root cause or key field constraint discovered, major skill/code/report artifact written, spike/verification passed), immediately append a checkpoint entry to `01_Daily_Logs/YYYY-MM-DD.md`.
-  3. **Task Completion / Git Commit & Push**: When a task or pipeline stage finishes, append the final outcome entry and update `00_TODO.md` (`[x]`).
-- **Logging Procedure**:
+## 2. Asynchronous Checkpoint & Completion Logging via Background Subagent (`01_Daily_Logs/YYYY-MM-DD.md`)
+Logging is a supporting record, not the primary task. Rather than interrupting the main work or relying on static counters, the main agent uses **its own LLM judgment** to detect meaningful checkpoints during or at the end of work and spawns a **background subagent (`invoke_subagent`)** to organize and write the log asynchronously:
+- **When to Trigger (LLM Judgment)**:
+  1. **Decision / Alignment Confirmed**: A key design, architecture, or operational direction is agreed upon with the user.
+  2. **Analysis / Recon Milestone**: Significant insights, domain findings, root causes, or document/data synthesis conclusions are reached mid-task.
+  3. **Artifact / Task Completion**: A major deliverable (recon report, service map, domain simulation, reverse plan, code change, or git commit/push) is completed.
+- **How to Delegate (Non-Blocking Subagent)**:
+  - Invoke a lightweight background subagent (`invoke_subagent` with `TypeName: "self"`, `Model: "flash"`, `Role: "Work-Ops Logger"`) passing the concise context of what was decided/analyzed/completed, its core rationale (`Why`), and any touched files.
+  - The main agent continues its primary conversation/task immediately without waiting or polling.
+- **Subagent Logging Format**:
   1. Append to `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md` under `## Log` (if creating a new `YYYY-MM-DD.md` file, immediately register it in `~/docsspace/work-ops/00_SSOT_INDEX.md`):
-     - **For general engineering / setup / milestone checkpoints**:
+     - **For general engineering / analysis / decision checkpoints**:
        ```markdown
        - **[HH:MM] <Title>** (`[[<project-or-workspace>]]`)
-         - Why: <Core rationale, decision, or checkpoint outcome>
-         - Files: <Key files created/modified>
+         - Why: <Core rationale, decision, or analysis conclusion>
+         - Files: <Key files created/modified/analyzed>
        ```
      - **For FDE client / field observations (do not inflate into a full essay yet; capture structured facts)**:
        ```markdown
@@ -46,7 +49,7 @@ Do not wait only for final session completion or explicit user requests. Trigger
          - Decision & Action (FDE 80:20 판단): <What to automate (80% Auto) vs keep in human review (20% Repair Admin)>
          - Files: <Key files created/modified, if any>
        ```
-  2. If the completed task matches an item in `00_TODO.md`, move that item to `## Done` as `- [x] <Task> [created:: YYYY-MM-DD] [done:: [[YYYY-MM-DD]]]`.
+  2. If the task status changed in `00_TODO.md`, update it (`[ ]` ➔ `[/]` when in progress, or move to `## Done` as `- [x] <Task> [created:: YYYY-MM-DD] [done:: [[YYYY-MM-DD]]]` upon completion).
 
 ## 3. Daily Work Review (`## Review`)
 Read `00_TODO.md` and `01_Daily_Logs/YYYY-MM-DD.md` to review and save under `## Review` in `01_Daily_Logs/YYYY-MM-DD.md`:

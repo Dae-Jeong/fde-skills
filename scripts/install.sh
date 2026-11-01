@@ -124,16 +124,21 @@ for aux_path in "${HOME}/.agents/skills"/*; do
   fi
 done
 
-# 6. Configure Work-Ops Lifecycle Hooks (Session Briefing + Checkpoint Auto-Logging Trigger)
-HOOK_SCRIPT="${REPO_ROOT}/scripts/work-ops-hook.py"
-chmod +x "${HOOK_SCRIPT}"
-
-python3 - "${HOOK_SCRIPT}" <<'PYEOF'
+# 6. Configure Session-Start TODO Briefing Hook (Zero static post-hooks; logging is delegated via LLM subagent)
+python3 - <<'PYEOF'
 import json
 import os
-import sys
 
-hook_script = sys.argv[1]
+briefing_py = (
+    "import datetime,os,re; "
+    "p=os.path.expanduser('~/docsspace/work-ops/00_TODO.md'); "
+    "t=datetime.date.today(); "
+    "lines=open(p).read().splitlines() if os.path.exists(p) else []; "
+    "items=[((t-datetime.date.fromisoformat(m.group(1))).days if (m:=re.search(r'created::\\s*(\\d{4}-\\d{2}-\\d{2})',l)) else 0, l.strip()) for l in lines if l.strip().startswith(('- [ ]','- [/]'))]; "
+    "items.sort(key=lambda x:-x[0]); "
+    "body='\\n'.join(f'{i}. (D+{k}) {s[2:]}' for i,(k,s) in enumerate(items,1)) or '- None'; "
+    "md=f'**TODO (원장: ~/docsspace/work-ops/00_TODO.md | {t})**\\n{body}'"
+)
 
 # 6-1. Antigravity (~/.gemini/config/hooks.json)
 gemini_hooks_path = os.path.expanduser("~/.gemini/config/hooks.json")
@@ -148,17 +153,15 @@ g_hooks["work-ops-session-briefing"] = {
     "PreInvocation": [
         {
             "type": "command",
-            "command": f"python3 '{hook_script}' pre",
+            "command": (
+                "python3 -c \"import json,sys; d=json.loads(sys.stdin.read() or '{}'); "
+                "sys.exit(print('{}') or 0) if d.get('invocationNum',1)!=1 else None; "
+                f"{briefing_py}; "
+                "print(json.dumps({'injectSteps':[{'systemMessage':{'systemMessage':md,'metadata':{'user_markdown':md}}}]},ensure_ascii=False))\""
+            ),
             "timeout": 5,
         }
-    ],
-    "PostInvocation": [
-        {
-            "type": "command",
-            "command": f"python3 '{hook_script}' post",
-            "timeout": 5,
-        }
-    ],
+    ]
 }
 
 with open(gemini_hooks_path, "w", encoding="utf-8") as f:
@@ -181,7 +184,7 @@ c_settings["hooks"]["SessionStart"] = [
         "hooks": [
             {
                 "type": "command",
-                "command": f"python3 '{hook_script}' claude-session",
+                "command": f"python3 -c \"{briefing_py}; print(md)\"",
             }
         ],
     }
@@ -191,5 +194,5 @@ with open(claude_settings_path, "w", encoding="utf-8") as f:
     json.dump(c_settings, f, ensure_ascii=False, indent=2)
     f.write("\n")
 
-print(f"Synced Work-Ops hooks -> {gemini_hooks_path} & {claude_settings_path}")
+print(f"Synced Session-Start TODO Briefing hook -> {gemini_hooks_path} & {claude_settings_path}")
 PYEOF
