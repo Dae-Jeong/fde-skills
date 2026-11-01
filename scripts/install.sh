@@ -30,18 +30,13 @@ if [ ! -f "${DOCSSPACE_DIR}/00_INDEX.md" ]; then
 type: vault-index
 updated: $(date +%Y-%m-%d)
 ---
-# docsspace — Master SSOT Index (전체 원장 목차)
+# docsspace — Master Index
 
-> 본 볼트(\`~/docsspace/\`)는 모든 개인 업무(\`work-ops\`) 및 FDE 프로젝트 문서(\`<project-slug>\`)의 **유일한 단일 진실 공급원(SSOT)**입니다.
+> \`~/docsspace/\` 내 전체 폴더 목록과 역할 요약입니다. 각 폴더 내부의 상세 파일 목록은 해당 폴더의 Index 문서를 참조합니다.
 
-## 1. 개인 업무 운영 원장 (\`work-ops/\`)
-- **[work-ops/00_TODO.md](./work-ops/00_TODO.md)**: 누적 할 일 원장 (\`D+N\` 오래된 순)
-- **[work-ops/01_Daily_Logs/](./work-ops/01_Daily_Logs/)**: 일일 작업 로그 및 회고
-- **[work-ops/99_Archive/](./work-ops/99_Archive/)**: 완료 아카이브
-
-## 2. FDE 고객사 / 프로젝트별 원장 (\`<project-slug>/\`)
-| 프로젝트 폴더 | 대표 목차 (Index) | 핵심 산출물 현황 |
-| :--- | :--- | :--- |
+| 폴더 | 구분 | 폴더 설명 (무엇을 관리하는 곳인가) | 진입 목차 (Index) |
+| :--- | :---: | :--- | :--- |
+| **[\`work-ops/\`](./work-ops/)** | 개인 업무 원장 | 전 워크스페이스 통합 누적 할 일(\`00_TODO.md\`, \`D+N\` 정렬), 일일 작업 로그 및 회고(\`01_Daily_Logs/\`), 완료 아카이브(\`99_Archive/\`) 관리 | **[work-ops/00_TODO.md](./work-ops/00_TODO.md)** |
 EOF
   echo "Initialized Vault Master Index: ${DOCSSPACE_DIR}/00_INDEX.md"
 fi
