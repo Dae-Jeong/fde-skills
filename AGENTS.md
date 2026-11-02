@@ -2,9 +2,11 @@
 
 이 저장소는 FDE(Forward Deployed Engineer) 파이프라인 스킬과 일일 업무/시각화 표준 스킬의 **단일 원장(Single Source of Truth)**이며, 로컬 비공개 Obsidian 볼트(`~/docsspace/`)와 결합해 동작한다:
 
-1. **Public 스킬 저장소 (`~/personalspace/fde-skills`)**:
+1. **중앙 오케스트레이션 컨트롤 타워 (`~/personalspace/marin`)**:
+   - 전 워크스페이스(`fde-skills`, `wishket`, `jnh-press` 및 신규 고객사 프로젝트)와 개인 업무 원장(`~/docsspace/work-ops/`)을 조망하며 하위 워커 에이전트를 파견·감독(`orchestration` 스킬)하거나 세션을 핸드오프(`orca-cli` 스킬)하는 사령부 워크스페이스이다([`~/personalspace/marin/AGENTS.md`](../marin/AGENTS.md)).
+2. **Public 스킬 저장소 (`~/personalspace/fde-skills`)**:
    - 모든 에이전트(`~/.agents/skills/`, `~/.claude/skills/`, `~/.codex/skills/`, `~/.gemini/config/skills/`)가 공유하는 6종 스킬(`fde-client-recon`, `service-explorer`, `fde-domain-simulator`, `fde-reverse-plan`, `work-ops`, `diagram-renderer`)과 멀티 에이전트 공통 글로벌 룰([`configs/GLOBAL_RULES.md`](configs/GLOBAL_RULES.md) ➔ `~/.gemini/GEMINI.md`, `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.agents/AGENTS.md`)을 관리한다.
-2. **비공개 Obsidian 볼트 (`~/docsspace/`) — 2계층 Index 필수 규약**:
+3. **비공개 Obsidian 볼트 (`~/docsspace/`) — 2계층 Index 필수 규약**:
    - **1계층 볼트 마스터 목차 (`~/docsspace/00_INDEX.md`)**: `~/docsspace/` 내 전체 폴더 목록(`work-ops/`, `<project-slug>/` 등), 각 폴더가 무엇을 관리하는지(1줄 요약), 그리고 각 폴더의 `00_SSOT_INDEX.md` 진입 링크를 관리한다. 신규 폴더 생성 시 즉시 갱신한다.
    - **2계층 폴더별 상세 목차 (`~/docsspace/<folder>/00_SSOT_INDEX.md`)**: 모든 하위 폴더(`work-ops/` 및 모든 `<project-slug>/`)는 최상단에 `00_SSOT_INDEX.md`를 두고, 해당 폴더 내 파일/하위 폴더 목록과 각 파일이 담고 있는 핵심 내용을 요약해 관리한다. 파일이 추가·변경·삭제될 때마다 즉시 갱신한다(Update-on-Write).
    - **개인 업무 원장 (`~/docsspace/work-ops/`)**: 어느 작업 공간에서 세션을 열든 모든 할 일(`00_TODO.md`, `D+N` 오래된 순 정렬), 일일 작업 및 FDE 현장 일지·회고(`01_Daily_Logs/YYYY-MM-DD.md`), 완료 아카이브(`99_Archive/`)는 무조건 이곳을 유일한 원장(SSOT)으로 참조·갱신한다. 특히 작업 시작·완료 시점뿐 아니라 **작업 도중 의미 있는 중간 마일스톤(핵심 설계/의사결정 확정, 원인 규명, 주요 아티팩트 생성, Spike 검증 통과 등)에 도달할 때마다 즉시 `01_Daily_Logs/YYYY-MM-DD.md`에 체크포인트 로그를 추가**한다.
