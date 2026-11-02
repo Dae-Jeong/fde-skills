@@ -50,7 +50,9 @@ updated: $(date +%Y-%m-%d)
 ---
 # work-ops — 개인 업무 원장 SSOT Index
 
-> 본 폴더(\`~/docsspace/work-ops/\`)는 전 워크스페이스 통합 누적 할 일(To-Do), 일일 완료 작업 로그 및 회고, 완료 아카이브를 관리하는 **개인 업무 원장(Single Source of Truth)**입니다.
+## 🧠 Live Memory Header (세션 0턴 핵심 요약)
+- **프로젝트 정체성**: 전 워크스페이스 통합 할 일(\`00_TODO.md\`), 일일 작업/현장 로그(\`01_Daily_Logs/YYYY-MM-DD.md\`), 장기 완료 아카이브(\`99_Archive/\`)를 관리하는 개인 운영 원장 (\`~/docsspace/work-ops\`)
+- **핵심 운영 규칙**: \`00_TODO.md\`는 \`[created:: YYYY-MM-DD]\` 기준 \`D+N\` 오래된 순으로 브리핑하며, 완료(\`done\`) 후 7일 경과 항목만 \`99_Archive/Completed_YYYY-MM.md\`로 이관
 
 ---
 
@@ -124,75 +126,179 @@ for aux_path in "${HOME}/.agents/skills"/*; do
   fi
 done
 
-# 6. Configure Session-Start TODO Briefing Hook (Zero static post-hooks; logging is delegated via LLM subagent)
+# 6. Configure Session-Start & Post-Compact Briefing Hook (TODO + CWD Project Live Memory)
+BRIEFING_SCRIPT="${HOME}/.agents/session-briefing.py"
+cat <<'PYEOF' > "${BRIEFING_SCRIPT}"
+#!/usr/bin/env python3
+import datetime
+import glob
+import json
+import os
+import re
+import sys
+
+
+def build_briefing() -> str:
+    today = datetime.date.today()
+    todo_path = os.path.expanduser("~/docsspace/work-ops/00_TODO.md")
+    lines = open(todo_path, encoding="utf-8").read().splitlines() if os.path.exists(todo_path) else []
+    items = []
+    for line in lines:
+        s = line.strip()
+        if s.startswith(("- [ ]", "- [/]")):
+            m = re.search(r"created::\s*(\d{4}-\d{2}-\d{2})", s)
+            days = (today - datetime.date.fromisoformat(m.group(1))).days if m else 0
+            items.append((days, s))
+    items.sort(key=lambda x: -x[0])
+    todo_body = "\n".join(f"{i}. (D+{k}) {s[2:]}" for i, (k, s) in enumerate(items, 1)) or "- None"
+    sections = [f"**TODO (원장: ~/docsspace/work-ops/00_TODO.md | {today})**\n{todo_body}"]
+
+    cwd = os.path.realpath(os.getcwd())
+    docsspace = os.path.realpath(os.path.expanduser("~/docsspace"))
+
+    for ssot_path in sorted(glob.glob(os.path.join(docsspace, "*", "00_SSOT_INDEX.md"))):
+        proj_dir = os.path.realpath(os.path.dirname(ssot_path))
+        slug = os.path.basename(proj_dir)
+        try:
+            text = open(ssot_path, encoding="utf-8").read()
+        except Exception:
+            continue
+        code_repo = None
+        fm = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
+        if fm:
+            cm = re.search(r"^code_repo:\s*(.+)$", fm.group(1), re.MULTILINE)
+            if cm:
+                code_repo = os.path.realpath(os.path.expanduser(cm.group(1).strip()))
+        matched = (cwd == proj_dir or cwd.startswith(proj_dir + os.sep)) or (
+            code_repo and (cwd == code_repo or cwd.startswith(code_repo + os.sep))
+        )
+        if matched:
+            hm = re.search(
+                r"^##\s+🧠\s+Live Memory Header[^\n]*\n(.*?)(?=\n---|\n##\s+|\Z)",
+                text,
+                re.MULTILINE | re.DOTALL,
+            )
+            if hm and hm.group(1).strip():
+                sections.append(
+                    f"**[Project Live Memory: {slug} ({ssot_path})]**\n{hm.group(1).strip()}"
+                )
+            break
+
+    return "\n\n".join(sections)
+
+
+def main() -> None:
+    mode = sys.argv[1] if len(sys.argv) > 1 else "claude"
+    if mode == "antigravity":
+        raw = sys.stdin.read() or "{}"
+        try:
+            payload = json.loads(raw)
+        except Exception:
+            payload = {}
+        if payload.get("invocationNum", 1) != 1:
+            print("{}")
+            return
+        md = build_briefing()
+        print(
+            json.dumps(
+                {
+                    "injectSteps": [
+                        {
+                            "systemMessage": {
+                                "systemMessage": md,
+                                "metadata": {"user_markdown": md},
+                            }
+                        }
+                    ]
+                },
+                ensure_ascii=False,
+            )
+        )
+    else:
+        print(build_briefing())
+
+
+if __name__ == "__main__":
+    main()
+PYEOF
+chmod 755 "${BRIEFING_SCRIPT}"
+
 python3 - <<'PYEOF'
 import json
 import os
 
-briefing_py = (
-    "import datetime,os,re; "
-    "p=os.path.expanduser('~/docsspace/work-ops/00_TODO.md'); "
-    "t=datetime.date.today(); "
-    "lines=open(p).read().splitlines() if os.path.exists(p) else []; "
-    "items=[((t-datetime.date.fromisoformat(m.group(1))).days if (m:=re.search(r'created::\\s*(\\d{4}-\\d{2}-\\d{2})',l)) else 0, l.strip()) for l in lines if l.strip().startswith(('- [ ]','- [/]'))]; "
-    "items.sort(key=lambda x:-x[0]); "
-    "body='\\n'.join(f'{i}. (D+{k}) {s[2:]}' for i,(k,s) in enumerate(items,1)) or '- None'; "
-    "md=f'**TODO (원장: ~/docsspace/work-ops/00_TODO.md | {t})**\\n{body}'"
-)
+briefing_script = os.path.expanduser("~/.agents/session-briefing.py")
+
+
+def load_json_safe(path: str) -> dict:
+    if not os.path.exists(path) or os.path.getsize(path) == 0:
+        return {}
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    if not isinstance(data, dict):
+        raise ValueError(f"Expected JSON object in {path}")
+    return data
+
 
 # 6-1. Antigravity (~/.gemini/config/hooks.json)
 gemini_hooks_path = os.path.expanduser("~/.gemini/config/hooks.json")
 os.makedirs(os.path.dirname(gemini_hooks_path), exist_ok=True)
-try:
-    with open(gemini_hooks_path, encoding="utf-8") as f:
-        g_hooks = json.load(f)
-except Exception:
-    g_hooks = {}
-
+g_hooks = load_json_safe(gemini_hooks_path)
 g_hooks["work-ops-session-briefing"] = {
     "PreInvocation": [
         {
             "type": "command",
-            "command": (
-                "python3 -c \"import json,sys; d=json.loads(sys.stdin.read() or '{}'); "
-                "sys.exit(print('{}') or 0) if d.get('invocationNum',1)!=1 else None; "
-                f"{briefing_py}; "
-                "print(json.dumps({'injectSteps':[{'systemMessage':{'systemMessage':md,'metadata':{'user_markdown':md}}}]},ensure_ascii=False))\""
-            ),
+            "command": f"python3 {briefing_script} antigravity",
             "timeout": 5,
         }
     ]
 }
-
 with open(gemini_hooks_path, "w", encoding="utf-8") as f:
     json.dump(g_hooks, f, ensure_ascii=False, indent=2)
     f.write("\n")
 
-# 6-2. Claude Code (~/.claude/settings.json)
+# 6-2. Claude Code (~/.claude/settings.json) — preserve Orca hooks at inner hook level
 claude_settings_path = os.path.expanduser("~/.claude/settings.json")
 os.makedirs(os.path.dirname(claude_settings_path), exist_ok=True)
-try:
-    with open(claude_settings_path, encoding="utf-8") as f:
-        c_settings = json.load(f)
-except Exception:
-    c_settings = {}
+c_settings = load_json_safe(claude_settings_path)
+c_hooks = c_settings.setdefault("hooks", {})
+briefing_entry = {
+    "matcher": "*",
+    "hooks": [
+        {
+            "type": "command",
+            "command": f"python3 {briefing_script} claude",
+            "timeout": 5,
+        }
+    ],
+}
 
-c_settings.setdefault("hooks", {})
-c_settings["hooks"]["SessionStart"] = [
-    {
-        "matcher": "*",
-        "hooks": [
-            {
-                "type": "command",
-                "command": f"python3 -c \"{briefing_py}; print(md)\"",
-            }
-        ],
-    }
-]
+for event_name in ("SessionStart", "PostCompact"):
+    existing = c_hooks.get(event_name, [])
+    filtered = []
+    for item in existing:
+        if not isinstance(item, dict):
+            continue
+        kept_inner = [
+            h
+            for h in item.get("hooks", [])
+            if not (
+                isinstance(h, dict)
+                and (
+                    "00_TODO.md" in h.get("command", "")
+                    or "session-briefing.py" in h.get("command", "")
+                )
+            )
+        ]
+        if kept_inner:
+            new_item = dict(item)
+            new_item["hooks"] = kept_inner
+            filtered.append(new_item)
+    c_hooks[event_name] = [briefing_entry] + filtered
 
 with open(claude_settings_path, "w", encoding="utf-8") as f:
     json.dump(c_settings, f, ensure_ascii=False, indent=2)
     f.write("\n")
 
-print(f"Synced Session-Start TODO Briefing hook -> {gemini_hooks_path} & {claude_settings_path}")
+print(f"Synced Session-Start & Post-Compact Briefing hook -> {gemini_hooks_path} & {claude_settings_path}")
 PYEOF

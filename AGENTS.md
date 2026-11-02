@@ -3,7 +3,7 @@
 이 저장소는 FDE(Forward Deployed Engineer) 파이프라인 스킬과 일일 업무/시각화 표준 스킬의 **단일 원장(Single Source of Truth)**이며, 로컬 비공개 Obsidian 볼트(`~/docsspace/`)와 결합해 동작한다:
 
 1. **중앙 오케스트레이션 컨트롤 타워 (`~/personalspace/marin`)**:
-   - 전 워크스페이스(`fde-skills`, `wishket`, `jnh-press` 및 신규 고객사 프로젝트)와 개인 업무 원장(`~/docsspace/work-ops/`)을 조망하며 하위 워커 에이전트를 파견·감독(`orchestration` 스킬)하거나 세션을 핸드오프(`orca-cli` 스킬)하는 사령부 워크스페이스이다([`~/personalspace/marin/AGENTS.md`](../marin/AGENTS.md)).
+   - 전체 프로젝트 워크스페이스와 개인 업무 원장(`~/docsspace/work-ops/`)을 조망하며 하위 워커 에이전트를 파견·감독(`orchestration` 스킬)하거나 세션을 핸드오프(`orca-cli` 스킬)하는 사령부 워크스페이스이다([`~/personalspace/marin/AGENTS.md`](../marin/AGENTS.md)).
 2. **Public 스킬 저장소 (`~/personalspace/fde-skills`)**:
    - 모든 에이전트(`~/.agents/skills/`, `~/.claude/skills/`, `~/.codex/skills/`, `~/.gemini/config/skills/`)가 공유하는 6종 스킬(`fde-client-recon`, `service-explorer`, `fde-domain-simulator`, `fde-reverse-plan`, `work-ops`, `diagram-renderer`)과 멀티 에이전트 공통 글로벌 룰([`configs/GLOBAL_RULES.md`](configs/GLOBAL_RULES.md) ➔ `~/.gemini/GEMINI.md`, `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.agents/AGENTS.md`)을 관리한다.
 3. **비공개 Obsidian 볼트 (`~/docsspace/`) — 2계층 Index 필수 규약**:
