@@ -35,9 +35,9 @@ updated: $(date +%Y-%m-%d)
 
 > \`~/docsspace/\` 내 전체 폴더 목록과 역할 요약입니다. 각 폴더 내부의 상세 파일 목록과 내용은 해당 폴더의 \`00_SSOT_INDEX.md\` 문서를 참조합니다.
 
-| 폴더 | 구분 | 폴더 설명 (무엇을 관리하는 곳인가) | 진입 목차 (Index) |
-| :--- | :---: | :--- | :--- |
-| **[\`work-ops/\`](./work-ops/)** | 개인 업무 원장 | 전 워크스페이스 통합 누적 할 일(\`00_TODO.md\`, \`D+N\` 정렬), 일일 작업 로그 및 회고(\`01_Daily_Logs/\`), 완료 아카이브(\`99_Archive/\`) 관리 | **[work-ops/00_SSOT_INDEX.md](./work-ops/00_SSOT_INDEX.md)** |
+| 프로젝트명 (폴더) | 구분 | 연결된 코드 저장소 (\`workspace\`) | 폴더 설명 (무엇을 관리하는 곳인가) | 진입 목차 (Index) |
+| :--- | :---: | :--- | :--- | :--- |
+| **[\`work-ops/\`](./work-ops/)** | 개인 업무 원장 | *(해당 없음 — 볼트 전용)* | 전 워크스페이스 통합 누적 할 일(\`00_TODO.md\`, \`D+N\` 정렬), 일일 작업 로그 및 회고(\`01_Daily_Logs/\`), 완료 아카이브(\`99_Archive/\`) 관리 | **[work-ops/00_SSOT_INDEX.md](./work-ops/00_SSOT_INDEX.md)** |
 EOF
   echo "Initialized Vault Master Index: ${DOCSSPACE_DIR}/00_INDEX.md"
 fi
