@@ -5,7 +5,8 @@
 1. **중앙 오케스트레이션 컨트롤 타워 (`~/personalspace/marin`)**:
    - 전체 프로젝트 워크스페이스와 개인 업무 원장(`~/docsspace/work-ops/`)을 조망하며 하위 워커 에이전트를 파견·감독(`orchestration` 스킬)하거나 세션을 핸드오프(`orca-cli` 스킬)하는 사령부 워크스페이스이다([`~/personalspace/marin/AGENTS.md`](../marin/AGENTS.md)).
 2. **Public 스킬 저장소 (`~/personalspace/fde-skills`)**:
-   - 모든 에이전트(`~/.agents/skills/`, `~/.claude/skills/`, `~/.codex/skills/`, `~/.gemini/config/skills/`)가 공유하는 6종 스킬(`fde-client-recon`, `service-explorer`, `fde-domain-simulator`, `fde-reverse-plan`, `work-ops`, `diagram-renderer`)과 멀티 에이전트 공통 글로벌 룰([`configs/GLOBAL_RULES.md`](configs/GLOBAL_RULES.md) ➔ `~/.gemini/GEMINI.md`, `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.agents/AGENTS.md`)을 관리한다.
+   - 모든 에이전트(`~/.agents/skills/`, `~/.claude/skills/`, `~/.codex/skills/`, `~/.gemini/config/skills/`)가 공유하는 6종 스킬(`fde-client-recon`, `service-explorer`, `fde-domain-simulator`, `fde-reverse-plan`, `work-ops`, `diagram`)과 멀티 에이전트 공통 글로벌 룰([`configs/GLOBAL_RULES.md`](configs/GLOBAL_RULES.md) ➔ `~/.gemini/GEMINI.md`, `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, `~/.agents/AGENTS.md`)을 관리한다.
+   - **Audience-based Visualization**: [`diagram`](skills/diagram/SKILL.md)은 엔지니어용 Blueprint(공식 로고·인프라·복제/샤딩 `stack`, 기술 실행/이벤트/실패 복구 `flow`, 빠른 인라인 ASCII/Mermaid)를 담당한다. `archify`(별도 설치)는 비개발자·기획·고객을 위한 업무 흐름·페이지 여정·물리 ERD·인터랙티브 설명 페이지를 담당한다. 명시한 출력 형식을 우선한다. `diagram templates/init/build`를 사용한다.
 3. **비공개 Obsidian 볼트 (`~/docsspace/`) — 2계층 Index 필수 규약**:
    - **1계층 볼트 마스터 목차 (`~/docsspace/00_INDEX.md`)**: `~/docsspace/` 내 전체 폴더 목록(`work-ops/`, `<project-slug>/` 등), 각 폴더가 무엇을 관리하는지(1줄 요약), 그리고 각 폴더의 `00_SSOT_INDEX.md` 진입 링크를 관리한다. 신규 폴더 생성 시 즉시 갱신한다.
    - **2계층 폴더별 상세 목차 (`~/docsspace/<folder>/00_SSOT_INDEX.md`)**: 모든 하위 폴더(`work-ops/` 및 모든 `<project-slug>/`)는 최상단에 `00_SSOT_INDEX.md`를 두고, 해당 폴더 내 파일/하위 폴더 목록과 각 파일이 담고 있는 핵심 내용을 요약해 관리한다. 파일이 추가·변경·삭제될 때마다 즉시 갱신한다(Update-on-Write).

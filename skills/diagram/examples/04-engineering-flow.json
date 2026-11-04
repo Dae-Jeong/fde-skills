@@ -1,0 +1,133 @@
+{
+  "mode": "flow",
+  "title": "Request → Event → DLQ fallback",
+  "kicker": "flow / request to DLQ recovery",
+  "lede": "Validate a request, publish an event, persist idempotently, and recover exhausted retries through a dead-letter queue.",
+  "icons": [
+    "go:go",
+    "kafka:apache-kafka",
+    "postgres:postgresql"
+  ],
+  "nodes": [
+    {
+      "id": "request",
+      "row": 0,
+      "col": 0,
+      "icon": "go",
+      "name": "Validate request",
+      "step": "01 / ingress",
+      "detail": "POST /orders · JWT",
+      "status": "primary"
+    },
+    {
+      "id": "publish",
+      "row": 0,
+      "col": 1,
+      "icon": "kafka",
+      "name": "Publish event",
+      "step": "02 / accepted",
+      "detail": "key = order_id",
+      "status": "primary"
+    },
+    {
+      "id": "consume",
+      "row": 0,
+      "col": 2,
+      "name": "Consume + dedupe",
+      "step": "03 / worker",
+      "detail": "idempotency_key",
+      "status": "warn"
+    },
+    {
+      "id": "persist",
+      "row": 0,
+      "col": 3,
+      "icon": "postgres",
+      "name": "Commit transaction",
+      "step": "04 / success",
+      "detail": "UPSERT + ACK",
+      "status": "success"
+    },
+    {
+      "id": "dlq",
+      "row": 1,
+      "col": 1,
+      "icon": "kafka",
+      "name": "Dead-letter queue",
+      "step": "05 / exhausted",
+      "detail": "retry_count >= 3",
+      "status": "danger"
+    },
+    {
+      "id": "repair",
+      "row": 1,
+      "col": 0,
+      "name": "Repair + replay",
+      "step": "06 / recovery",
+      "detail": "retain original key",
+      "status": "warn"
+    }
+  ],
+  "groups": [
+    {
+      "id": "runtime",
+      "label": "Request and event execution",
+      "style": "gb",
+      "nodes": [
+        "request",
+        "publish",
+        "consume",
+        "persist"
+      ]
+    },
+    {
+      "id": "recovery",
+      "label": "Failure recovery",
+      "style": "gp",
+      "nodes": [
+        "dlq",
+        "repair"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "request",
+      "to": "publish",
+      "label": "produce :9092"
+    },
+    {
+      "from": "publish",
+      "to": "consume",
+      "label": "poll + commit"
+    },
+    {
+      "from": "consume",
+      "to": "persist",
+      "label": "UPSERT tx"
+    },
+    {
+      "from": "consume",
+      "to": "dlq",
+      "label": "failed ×3",
+      "type": "dashed"
+    },
+    {
+      "from": "dlq",
+      "to": "repair",
+      "label": "operator triage",
+      "type": "dashed"
+    },
+    {
+      "from": "repair",
+      "to": "request",
+      "label": "replay same key",
+      "type": "dashed"
+    }
+  ],
+  "legend_labels": {
+    "primary": "Normal path",
+    "dashed": "Failure and recovery",
+    "warn": "Can retry or need an operator"
+  }
+}

@@ -5,6 +5,21 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SKILLS_DIR="${REPO_ROOT}/skills"
 CONFIGS_DIR="${REPO_ROOT}/configs"
 
+link_managed() {
+  local src="$1" dst="$2"
+  if [ -e "$dst" ] && [ ! -L "$dst" ]; then
+    echo "Warning: preserving unmanaged path: $dst" >&2
+    return 0
+  fi
+  if [ -L "$dst" ]; then rm "$dst"; fi
+  ln -s "$src" "$dst"
+  echo "Linked: $dst -> $src"
+}
+
+# Install the diagram CLI.
+mkdir -p "${HOME}/.local/bin"
+link_managed "${SKILLS_DIR}/diagram/bin/diagram" "${HOME}/.local/bin/diagram"
+
 TARGET_DIRS=(
   "${HOME}/.agents/skills"
   "${HOME}/.claude/skills"
@@ -87,31 +102,21 @@ fi
 RULE_SRC="${CONFIGS_DIR}/GLOBAL_RULES.md"
 if [ -f "${RULE_SRC}" ]; then
   mkdir -p "${HOME}/.gemini" "${HOME}/.claude" "${HOME}/.codex" "${HOME}/.agents"
-  ln -sfn "${RULE_SRC}" "${HOME}/.gemini/GEMINI.md"
-  ln -sfn "${RULE_SRC}" "${HOME}/.claude/CLAUDE.md"
-  ln -sfn "${RULE_SRC}" "${HOME}/.codex/AGENTS.md"
-  ln -sfn "${RULE_SRC}" "${HOME}/.agents/AGENTS.md"
+  link_managed "${RULE_SRC}" "${HOME}/.gemini/GEMINI.md"
+  link_managed "${RULE_SRC}" "${HOME}/.claude/CLAUDE.md"
+  link_managed "${RULE_SRC}" "${HOME}/.codex/AGENTS.md"
+  link_managed "${RULE_SRC}" "${HOME}/.agents/AGENTS.md"
   echo "Linked global rules (GEMINI.md / CLAUDE.md / AGENTS.md) -> ${RULE_SRC}"
 fi
 
 # 4. Prune broken symlinks and link all skills from fde-skills/skills/* into ~/.agents, ~/.claude, ~/.codex, and ~/.gemini
 for target_base in "${TARGET_DIRS[@]}"; do
   mkdir -p "${target_base}"
-  for existing in "${target_base}"/*; do
-    if [ -L "${existing}" ] && [ ! -e "${existing}" ]; then
-      rm -f "${existing}"
-      echo "Pruned broken symlink: ${existing}"
-    fi
-  done
   for skill_path in "${SKILLS_DIR}"/*; do
     [ -d "${skill_path}" ] || continue
     skill_name="$(basename "${skill_path}")"
     target_link="${target_base}/${skill_name}"
-    if [ -d "${target_link}" ] && [ ! -L "${target_link}" ]; then
-      rm -rf "${target_link}"
-    fi
-    ln -sfn "${skill_path}" "${target_link}"
-    echo "Linked: ${target_link} -> ${skill_path}"
+    link_managed "${skill_path}" "${target_link}"
   done
 done
 
@@ -121,7 +126,7 @@ for aux_path in "${HOME}/.agents/skills"/*; do
   aux_name="$(basename "${aux_path}")"
   if [ ! -d "${SKILLS_DIR}/${aux_name}" ]; then
     for extra_base in "${HOME}/.claude/skills" "${HOME}/.codex/skills" "${HOME}/.gemini/config/skills"; do
-      ln -sfn "${aux_path}" "${extra_base}/${aux_name}"
+      link_managed "${aux_path}" "${extra_base}/${aux_name}"
     done
   fi
 done

@@ -1,0 +1,360 @@
+{
+  "mode": "stack",
+  "title": "MSA Platform — Functional Layer & Split Storage View",
+  "kicker": "layers / responsibility view",
+  "lede": "The same 18 nodes and 17 edges as the infra view, regrouped by responsibility to separate OLTP from OLAP storage.",
+  "icons": [
+    "aws:aws/AWS-Cloud-logo",
+    "vpc:aws/vpc",
+    "alb:aws/alb",
+    "s3:aws/s3",
+    "cloudflare:cloudflare",
+    "k8s:kubernetes",
+    "envoy:envoy",
+    "nextjs:nextjs",
+    "go:go",
+    "spring:spring",
+    "python:python",
+    "kafka:apache-kafka",
+    "postgres:postgresql",
+    "redis:redis",
+    "clickhouse:clickhouse",
+    "argocd:argo",
+    "githubactions:github-actions",
+    "prometheus:prometheus",
+    "grafana:grafana",
+    "user:lucide/users"
+  ],
+  "groups": [
+    {
+      "id": "edge_layer",
+      "label": "Edge & Ingress Layer",
+      "icon": "cloudflare",
+      "style": "ga",
+      "nodes": [
+        "cloudflare",
+        "alb"
+      ]
+    },
+    {
+      "id": "obs_stack",
+      "label": "Observability",
+      "icon": "prometheus",
+      "style": "gb",
+      "nodes": [
+        "prometheus",
+        "grafana"
+      ]
+    },
+    {
+      "id": "gitops",
+      "label": "GitOps CI/CD",
+      "icon": "githubactions",
+      "style": "ga",
+      "nodes": [
+        "gh_actions",
+        "argocd"
+      ]
+    },
+    {
+      "id": "sync_api",
+      "label": "Synchronous API Mesh (K8s)",
+      "icon": "k8s",
+      "style": "gb",
+      "nodes": [
+        "envoy",
+        "nextjs",
+        "go_auth",
+        "spring_order"
+      ]
+    },
+    {
+      "id": "async_stream",
+      "label": "Event Streaming & Workers",
+      "icon": "kafka",
+      "style": "gb",
+      "nodes": [
+        "go_billing",
+        "kafka",
+        "py_ml"
+      ]
+    },
+    {
+      "id": "oltp_store",
+      "label": "OLTP & Cache Storage",
+      "icon": "postgres",
+      "style": "aws private",
+      "nodes": [
+        "redis",
+        "postgres"
+      ]
+    },
+    {
+      "id": "olap_store",
+      "label": "OLAP & Object Lake Storage",
+      "icon": "clickhouse",
+      "style": "ga",
+      "nodes": [
+        "clickhouse",
+        "s3"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "clients",
+      "row": 0,
+      "col": 0,
+      "icon": "user",
+      "name": "Global Clients",
+      "role": "web & mobile"
+    },
+    {
+      "id": "cloudflare",
+      "row": 1,
+      "col": 0,
+      "icon": "cloudflare",
+      "name": "Cloudflare",
+      "role": "dns / waf / cdn"
+    },
+    {
+      "id": "alb",
+      "row": 1,
+      "col": 1,
+      "icon": "alb",
+      "name": "Elastic Load Balancing",
+      "role": "aws alb ingress",
+      "wide": true
+    },
+    {
+      "id": "prometheus",
+      "row": 1,
+      "col": 3,
+      "icon": "prometheus",
+      "name": "Prometheus",
+      "role": "metrics tsdb"
+    },
+    {
+      "id": "grafana",
+      "row": 1,
+      "col": 4,
+      "icon": "grafana",
+      "name": "Grafana",
+      "role": "dashboards"
+    },
+    {
+      "id": "gh_actions",
+      "row": 2,
+      "col": 0,
+      "icon": "githubactions",
+      "name": "GitHub Actions",
+      "role": "ci build & test"
+    },
+    {
+      "id": "envoy",
+      "row": 2,
+      "col": 1,
+      "icon": "envoy",
+      "name": "Envoy Gateway",
+      "role": "ingress & mesh"
+    },
+    {
+      "id": "nextjs",
+      "row": 2,
+      "col": 2,
+      "icon": "nextjs",
+      "name": "Next.js BFF",
+      "role": "ssr & edge api"
+    },
+    {
+      "id": "go_auth",
+      "row": 2,
+      "col": 3,
+      "icon": "go",
+      "name": "Go Auth Svc",
+      "role": "jwt / rate-limit"
+    },
+    {
+      "id": "spring_order",
+      "row": 2,
+      "col": 4,
+      "icon": "spring",
+      "name": "Spring Order Svc",
+      "role": "core domain"
+    },
+    {
+      "id": "argocd",
+      "row": 3,
+      "col": 0,
+      "icon": "argocd",
+      "name": "Argo CD",
+      "role": "k8s gitops"
+    },
+    {
+      "id": "go_billing",
+      "row": 3,
+      "col": 2,
+      "icon": "go",
+      "name": "Go Billing Svc",
+      "role": "payment worker"
+    },
+    {
+      "id": "kafka",
+      "row": 3,
+      "col": 3,
+      "icon": "kafka",
+      "name": "Apache Kafka",
+      "role": "strimzi event bus"
+    },
+    {
+      "id": "py_ml",
+      "row": 3,
+      "col": 4,
+      "icon": "python",
+      "name": "Python ML Worker",
+      "role": "fraud & embedding"
+    },
+    {
+      "id": "redis",
+      "row": 4,
+      "col": 1,
+      "icon": "redis",
+      "name": "Redis Cluster",
+      "role": "session & cache"
+    },
+    {
+      "id": "postgres",
+      "row": 4,
+      "col": 2,
+      "icon": "postgres",
+      "name": "PostgreSQL",
+      "role": "primary rdbms"
+    },
+    {
+      "id": "clickhouse",
+      "row": 4,
+      "col": 3,
+      "icon": "clickhouse",
+      "name": "ClickHouse",
+      "role": "olap analytics"
+    },
+    {
+      "id": "s3",
+      "row": 4,
+      "col": 4,
+      "icon": "s3",
+      "name": "Amazon S3",
+      "role": "object lake",
+      "wide": true
+    }
+  ],
+  "edges": [
+    {
+      "from": "clients",
+      "to": "cloudflare",
+      "label": "HTTPS :443",
+      "type": "primary"
+    },
+    {
+      "from": "cloudflare",
+      "to": "alb",
+      "label": "origin pull :443",
+      "type": "primary"
+    },
+    {
+      "from": "alb",
+      "to": "envoy",
+      "label": "TLS end → :8443",
+      "type": "primary"
+    },
+    {
+      "from": "envoy",
+      "to": "nextjs",
+      "label": "HTTP/2 :3000",
+      "type": "primary"
+    },
+    {
+      "from": "nextjs",
+      "to": "go_auth",
+      "label": "gRPC :50051",
+      "type": "primary"
+    },
+    {
+      "from": "go_auth",
+      "to": "spring_order",
+      "label": "gRPC :50052",
+      "type": "primary"
+    },
+    {
+      "from": "spring_order",
+      "to": "kafka",
+      "label": "produce order.*",
+      "type": "internal"
+    },
+    {
+      "from": "kafka",
+      "to": "py_ml",
+      "label": "consume fraud.*",
+      "type": "internal"
+    },
+    {
+      "from": "kafka",
+      "to": "go_billing",
+      "label": "consume order.created",
+      "type": "internal"
+    },
+    {
+      "from": "go_billing",
+      "to": "redis",
+      "label": "SET NX lock",
+      "type": "internal"
+    },
+    {
+      "from": "go_billing",
+      "to": "postgres",
+      "label": "ACID tx :5432",
+      "type": "internal"
+    },
+    {
+      "from": "kafka",
+      "to": "clickhouse",
+      "label": "Kafka engine sink",
+      "type": "internal"
+    },
+    {
+      "from": "py_ml",
+      "to": "s3",
+      "label": "PUT model artifact",
+      "type": "internal"
+    },
+    {
+      "from": "gh_actions",
+      "to": "argocd",
+      "label": "bump tag",
+      "type": "dashed"
+    },
+    {
+      "from": "argocd",
+      "to": "go_billing",
+      "label": "sync manifests",
+      "type": "dashed"
+    },
+    {
+      "from": "prometheus",
+      "to": "grafana",
+      "label": "PromQL :9090",
+      "type": "dashed"
+    },
+    {
+      "from": "prometheus",
+      "to": "go_auth",
+      "label": "scrape /metrics",
+      "type": "dashed"
+    }
+  ],
+  "legend_labels": {
+    "primary": "Request path",
+    "internal": "Event & data plane",
+    "dashed": "Control plane (CI/CD, metrics)"
+  }
+}

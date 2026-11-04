@@ -1,0 +1,221 @@
+{
+  "mode": "stack",
+  "title": "Sharded DB & Multi-Replica MSA (with Overlapping Domain Views)",
+  "kicker": "sharded / replicas and domain ownership",
+  "lede": "Order writes route through PgBouncer to two hash shards; the order team owns the service, the router and both shards.",
+  "icons": [
+    "k8s:kubernetes",
+    "envoy:envoy",
+    "nextjs:nextjs",
+    "go:go",
+    "spring:spring",
+    "kafka:apache-kafka",
+    "postgres:postgresql",
+    "redis:redis",
+    "clickhouse:clickhouse"
+  ],
+  "groups": [
+    {
+      "id": "k8s_compute",
+      "label": "Kubernetes Compute Tier",
+      "icon": "k8s",
+      "style": "gb",
+      "nodes": [
+        "envoy",
+        "nextjs",
+        "go_auth",
+        "spring_order",
+        "kafka"
+      ]
+    },
+    {
+      "id": "sharded_db_tier",
+      "label": "Sharded PostgreSQL & Cache Tier",
+      "icon": "postgres",
+      "style": "aws private",
+      "nodes": [
+        "redis",
+        "pg_router",
+        "pg_shard1",
+        "pg_shard2",
+        "clickhouse"
+      ]
+    },
+    {
+      "id": "order_vertical_slice",
+      "label": "Order Domain Ownership",
+      "icon": "spring",
+      "style": "gp",
+      "allow_overlap": true,
+      "pad_offset": -14,
+      "nodes": [
+        "spring_order",
+        "pg_router",
+        "pg_shard1",
+        "pg_shard2"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "envoy",
+      "row": 0,
+      "col": 0,
+      "icon": "envoy",
+      "name": "Envoy Ingress",
+      "role": "load balancer",
+      "replicas": 2,
+      "badge": "×2 HA"
+    },
+    {
+      "id": "nextjs",
+      "row": 0,
+      "col": 1,
+      "icon": "nextjs",
+      "name": "Next.js BFF",
+      "role": "ssr fleet",
+      "replicas": 4,
+      "badge": "×4 pods"
+    },
+    {
+      "id": "go_auth",
+      "row": 0,
+      "col": 2,
+      "icon": "go",
+      "name": "Go Auth Svc",
+      "role": "stateless jwt",
+      "replicas": 3,
+      "badge": "×3 pods"
+    },
+    {
+      "id": "spring_order",
+      "row": 0,
+      "col": 3,
+      "icon": "spring",
+      "name": "Order Service",
+      "role": "sharded writer",
+      "replicas": 6,
+      "badge": "×6 pods"
+    },
+    {
+      "id": "kafka",
+      "row": 0,
+      "col": 5,
+      "icon": "kafka",
+      "name": "Kafka Cluster",
+      "role": "12 partitions",
+      "replicas": 3,
+      "badge": "3 brokers"
+    },
+    {
+      "id": "redis",
+      "row": 1,
+      "col": 2,
+      "icon": "redis",
+      "name": "Redis Cluster",
+      "role": "hash-slot cache",
+      "replicas": 3,
+      "badge": "6 shards"
+    },
+    {
+      "id": "pg_router",
+      "row": 1,
+      "col": 3,
+      "icon": "postgres",
+      "name": "PgBouncer / Citus",
+      "role": "shard key: user_id",
+      "replicas": 2,
+      "badge": "×2 proxy"
+    },
+    {
+      "id": "pg_shard1",
+      "row": 2,
+      "col": 3,
+      "icon": "postgres",
+      "name": "Postgres Shard 01",
+      "role": "hash 0x00..0x7F",
+      "replicas": 3,
+      "badge": "1P + 2R"
+    },
+    {
+      "id": "pg_shard2",
+      "row": 2,
+      "col": 4,
+      "icon": "postgres",
+      "name": "Postgres Shard 02",
+      "role": "hash 0x80..0xFF",
+      "replicas": 3,
+      "badge": "1P + 2R"
+    },
+    {
+      "id": "clickhouse",
+      "row": 1,
+      "col": 5,
+      "icon": "clickhouse",
+      "name": "ClickHouse OLAP",
+      "role": "cdc replica sink",
+      "replicas": 2,
+      "badge": "2 shards"
+    }
+  ],
+  "edges": [
+    {
+      "from": "envoy",
+      "to": "nextjs",
+      "label": "HTTP/2 :3000",
+      "type": "primary"
+    },
+    {
+      "from": "nextjs",
+      "to": "go_auth",
+      "label": "gRPC :50051",
+      "type": "primary"
+    },
+    {
+      "from": "go_auth",
+      "to": "spring_order",
+      "label": "gRPC :50052",
+      "type": "primary"
+    },
+    {
+      "from": "spring_order",
+      "to": "kafka",
+      "label": "produce order.*",
+      "type": "internal"
+    },
+    {
+      "from": "go_auth",
+      "to": "redis",
+      "label": "GET session:{id}",
+      "type": "internal"
+    },
+    {
+      "from": "spring_order",
+      "to": "pg_router",
+      "label": "SQL :6432",
+      "type": "internal"
+    },
+    {
+      "from": "pg_router",
+      "to": "pg_shard1",
+      "label": "hash 00–7F",
+      "type": "internal"
+    },
+    {
+      "from": "pg_router",
+      "to": "pg_shard2",
+      "label": "hash 80–FF",
+      "type": "internal"
+    },
+    {
+      "from": "kafka",
+      "to": "clickhouse",
+      "label": "CDC topic sink",
+      "type": "internal"
+    }
+  ],
+  "legend_labels": {
+    "primary": "Request path",
+    "internal": "Data & event plane"
+  }
+}

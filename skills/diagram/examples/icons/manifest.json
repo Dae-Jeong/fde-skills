@@ -1,0 +1,148 @@
+{
+  "aws": {
+    "spec": "aws:aws/AWS-Cloud-logo",
+    "source": "aws",
+    "url": "https://d1.awsstatic.com/onedam/marketing-channels/website/public/shared/architecture-icon-release/Icon-package_07312026.5846e92413caa21490223536cc97f1269e44fa92.zip#Architecture-Group-Icons_07312026/AWS-Cloud-logo_32.svg",
+    "file": "aws.svg",
+    "bytes": 6364,
+    "dark_file": "aws.dark.svg",
+    "dark_url": "https://d1.awsstatic.com/onedam/marketing-channels/website/public/shared/architecture-icon-release/Icon-package_07312026.5846e92413caa21490223536cc97f1269e44fa92.zip#Architecture-Group-Icons_07312026/AWS-Cloud-logo_32_Dark.svg"
+  },
+  "vpc": {
+    "spec": "vpc:aws/vpc",
+    "source": "aws",
+    "url": "https://d1.awsstatic.com/onedam/marketing-channels/website/public/shared/architecture-icon-release/Icon-package_07312026.5846e92413caa21490223536cc97f1269e44fa92.zip#Architecture-Group-Icons_07312026/Virtual-private-cloud-VPC_32.svg",
+    "file": "vpc.svg",
+    "bytes": 3605
+  },
+  "alb": {
+    "spec": "alb:aws/alb",
+    "source": "aws",
+    "url": "https://d1.awsstatic.com/onedam/marketing-channels/website/public/shared/architecture-icon-release/Icon-package_07312026.5846e92413caa21490223536cc97f1269e44fa92.zip#Architecture-Service-Icons_07312026/Arch_Networking-Content-Delivery/64/Arch_Elastic-Load-Balancing_64.svg",
+    "file": "alb.svg",
+    "bytes": 1833
+  },
+  "s3": {
+    "spec": "s3:aws/s3",
+    "source": "aws",
+    "url": "https://d1.awsstatic.com/onedam/marketing-channels/website/public/shared/architecture-icon-release/Icon-package_07312026.5846e92413caa21490223536cc97f1269e44fa92.zip#Architecture-Service-Icons_07312026/Arch_Storage/64/Arch_Amazon-Simple-Storage-Service_64.svg",
+    "file": "s3.svg",
+    "bytes": 2010
+  },
+  "cloudflare": {
+    "spec": "cloudflare:cloudflare",
+    "source": "svgl",
+    "url": "https://svgl.app/library/cloudflare.svg",
+    "file": "cloudflare.svg",
+    "bytes": 1473
+  },
+  "k8s": {
+    "spec": "k8s:kubernetes",
+    "source": "svgl",
+    "url": "https://svgl.app/library/kubernetes.svg",
+    "file": "k8s.svg",
+    "bytes": 2429
+  },
+  "envoy": {
+    "spec": "envoy:envoy",
+    "source": "devicon",
+    "url": "https://raw.githubusercontent.com/devicons/devicon/master/icons/envoy/envoy-original.svg",
+    "file": "envoy.svg",
+    "bytes": 1340
+  },
+  "nextjs": {
+    "spec": "nextjs:nextjs",
+    "source": "svgl",
+    "url": "https://svgl.app/library/nextjs_icon_dark.svg",
+    "file": "nextjs.svg",
+    "bytes": 1091
+  },
+  "go": {
+    "spec": "go:go",
+    "source": "svgl",
+    "url": "https://svgl.app/library/golang.svg",
+    "file": "go.svg",
+    "bytes": 1472,
+    "dark_file": "go.dark.svg",
+    "dark_url": "https://svgl.app/library/golang_dark.svg"
+  },
+  "spring": {
+    "spec": "spring:spring",
+    "source": "svgl",
+    "url": "https://svgl.app/library/spring.svg",
+    "file": "spring.svg",
+    "bytes": 741
+  },
+  "python": {
+    "spec": "python:python",
+    "source": "svgl",
+    "url": "https://svgl.app/library/python.svg",
+    "file": "python.svg",
+    "bytes": 1126
+  },
+  "kafka": {
+    "spec": "kafka:apache-kafka",
+    "source": "svgl",
+    "url": "https://svgl.app/library/apache-kafka-light.svg",
+    "file": "kafka.svg",
+    "bytes": 6992,
+    "dark_file": "kafka.dark.svg",
+    "dark_url": "https://svgl.app/library/apache-kafka-dark.svg"
+  },
+  "postgres": {
+    "spec": "postgres:postgresql",
+    "source": "svgl",
+    "url": "https://svgl.app/library/postgresql.svg",
+    "file": "postgres.svg",
+    "bytes": 3944
+  },
+  "redis": {
+    "spec": "redis:redis",
+    "source": "svgl",
+    "url": "https://svgl.app/library/redis.svg",
+    "file": "redis.svg",
+    "bytes": 1928
+  },
+  "clickhouse": {
+    "spec": "clickhouse:clickhouse",
+    "source": "devicon",
+    "url": "https://raw.githubusercontent.com/devicons/devicon/master/icons/clickhouse/clickhouse-original.svg",
+    "file": "clickhouse.svg",
+    "bytes": 763
+  },
+  "argocd": {
+    "spec": "argocd:argo",
+    "source": "gilbarbara",
+    "url": "https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/argo-icon.svg",
+    "file": "argocd.svg",
+    "bytes": 23452
+  },
+  "githubactions": {
+    "spec": "githubactions:github-actions",
+    "source": "gilbarbara",
+    "url": "https://cdn.jsdelivr.net/gh/gilbarbara/logos/logos/github-actions.svg",
+    "file": "githubactions.svg",
+    "bytes": 6915
+  },
+  "prometheus": {
+    "spec": "prometheus:prometheus",
+    "source": "devicon",
+    "url": "https://raw.githubusercontent.com/devicons/devicon/master/icons/prometheus/prometheus-original.svg",
+    "file": "prometheus.svg",
+    "bytes": 1223
+  },
+  "grafana": {
+    "spec": "grafana:grafana",
+    "source": "svgl",
+    "url": "https://svgl.app/library/grafana.svg",
+    "file": "grafana.svg",
+    "bytes": 5850
+  },
+  "user": {
+    "spec": "user:lucide/users",
+    "source": "lucide",
+    "url": "https://cdn.jsdelivr.net/npm/lucide-static/icons/users.svg",
+    "file": "user.svg",
+    "bytes": 456
+  }
+}

@@ -14,7 +14,22 @@
 
 ### B. FDE 업무 원장 & 시각화 표준 스킬 (2종)
 - **개인 업무 원장(SSOT), FDE 현장 업무일지 & 일일 회고 (`work-ops`)**: 작업 공간에 무관하게 `~/docsspace/work-ops/`를 유일한 원장으로 삼아 오래된 순(`D+N`)으로 미완료 할 일을 브리핑·위임(`#ai`)하고, 완료 작업 및 **FDE 현장 메모(관찰 `Observation` · 숨은 규약 `Hidden Convention` · 80:20 판단 `Decision`)**와 일일 회고(`Takeaway` 포함)를 `01_Daily_Logs/YYYY-MM-DD.md`에 누적하며, 명시적 요청 시 비식별 기술 아티클로 변환합니다.
-- **응답 다이어그램 표준 렌더링 (`diagram-renderer`)**: 아키텍처·프로세스·데이터 흐름 설명 시 80~88열 폭 및 한/영(CJK) 정렬이 보정된 유니코드 ASCII 박스 다이어그램을 기본 렌더링하고, 명시적 요청 시 Mermaid 다이어그램으로 출력합니다.
+- **엔지니어링 Blueprint (`diagram`)**: 공식 로고·인프라·복제/샤딩은 `mode: stack`, 요청·이벤트·실패 복구 파이프라인은 `mode: flow` 카드로 같은 결정적 그리드와 직교 라우터에서 HTML/PNG를 생성합니다. 빠른 채팅·Markdown에는 80~88열 ASCII/Unicode 또는 Mermaid를 사용합니다.
+
+### Audience-based Visualization
+
+- **`diagram` — Engineering Blueprint**: 개발자용 인프라/MSA/샤딩 토폴로지(`stack`), 기술 실행·이벤트·DLQ 파이프라인(`flow`), 혼합 카드/타일, 인라인 ASCII/Mermaid. [스키마와 예제 5종](skills/diagram/SKILL.md).
+- **`archify` — Business / Page Flow (별도 설치)**: 비개발자·기획·고객에게 설명하는 업무 프로세스·페이지 여정·물리 ERD·인터랙티브 한 페이지 설명.
+
+요청한 출력 형식을 우선합니다. JSON의 `groups`를 바꾸면 인프라 경계·기능 계층·도메인 소유권 관점으로 전환할 수 있습니다.
+
+```bash
+diagram templates
+diagram init infra spec.json
+diagram build spec.json out.html --png
+```
+
+`./scripts/install.sh`가 CLI를 `~/.local/bin/diagram`에 연결합니다(PATH에 해당 경로 필요). `diagram templates --json`은 패턴 본문 없는 템플릿 메타데이터를 반환합니다. Python 3 표준 라이브러리를 사용하며 최초 로고 수집에는 네트워크가 필요합니다. PNG 내보내기에는 Playwright와 Chromium이 필요합니다.
 
 ---
 
@@ -22,6 +37,10 @@
 
 ```mermaid
 flowchart LR
+  subgraph VIS["Audience-based Visualization"]
+    V1["diagram / Engineering Blueprint: stack · flow · ASCII · Mermaid"]
+    V2["archify / Business · Page Journey · ERD · Explainer"]
+  end
   subgraph S1["1. 고객사 사전 정찰 (fde-client-recon)"]
     direction TB
     R0["Step 0: 6대 신호 점검 & 모드 결정<br/>(Distill: L3→L1 / Elaborate: L1→L3)"]
@@ -159,8 +178,13 @@ fde-skills/
     │   └── SKILL.md                  # Stage 3: 더티 데이터 Spike 기반 역산 계획서 작성
     ├── work-ops/
     │   └── SKILL.md                  # Stage 4 & Ops: ~/docsspace/work-ops/ 할 일(D+N)·FDE 현장 일지·회고·비식별 변환
-    └── diagram-renderer/
-        └── SKILL.md                  # Util: 한/영 폭 정렬 안전 ASCII 박스 다이어그램 & Mermaid 렌더링
+    └── diagram/
+        ├── SKILL.md                  # Engineering Blueprint: stack/flow HTML/PNG + 인라인 ASCII/Mermaid
+        ├── LICENSE                   # 원본 프로젝트 라이선스
+        ├── bin/diagram               # templates/init/build CLI (설치: ~/.local/bin/diagram)
+        ├── scripts/                  # compile_diagram.py, fetch_icons.py, render_png.py
+        ├── assets/                   # 내장 fonts/
+        └── examples/                 # infra/layers/sharded/flow/hybrid JSON 5종
 ```
 
 ---
@@ -174,7 +198,8 @@ fde-skills/
 | **Stage 2** | [`fde-domain-simulator`](skills/fde-domain-simulator/SKILL.md) | • **가로축 Stage 1~4 × 세로축 5-Layer** 20칸 매트릭스 해부<br>• **셀 출처 3분류**: `recon_evidence` / `recon_hypothesis` / `simulator_assumption`<br>• **이론 vs 현실 대조**: OEE·MRP·SPC (MTS) vs PERT/CPM·EVM·형상관리 (ETO) | • Stage × Layer 매트릭스 및 페르소나 롤플레잉<br>• 2계층 용어 사전 (스키마 용어 vs 현장 은어)<br>• [제조업 도메인 시뮬레이션 (HTML)](skills/fde-domain-simulator/examples/manufacturing-domain-simulation.html) / [PDF](skills/fde-domain-simulator/examples/manufacturing-domain-simulation.pdf) |
 | **Stage 3** | [`fde-reverse-plan`](skills/fde-reverse-plan/SKILL.md) | • **R1(As-Is) ➔ R2(To-Be)** 문제 정의 및 현업 숨은 규약 해독<br>• **80% 정상 + 20% 엣지케이스** 합성 데이터 기반 End-to-End Spike 실행<br>• **80% Auto Zone / 20% Repair Admin** 실현 가능성 구획 | • 합성 더티 데이터셋 및 Spike 실행 결과<br>• 80:20 자동화/수리 어드민 설계서<br>• 2주 스프린트 실행 로드맵 |
 | **Stage 4 & Ops** | [`work-ops`](skills/work-ops/SKILL.md) | • **단일 원장(`~/docsspace/work-ops/`)**: 전 워크스페이스 공통 `00_TODO.md`(`D+N` 정렬·`#ai` 위임) 및 `01_Daily_Logs/YYYY-MM-DD.md`<br>• **FDE 현장 일지 & 회고**: 현업 관찰(`Observation`)·숨은 규약(`Hidden Convention`)·80:20 판단(`Decision`)·오늘 남기는 원칙(`Takeaway`) 적재<br>• **온디맨드 비식별 변환**: 명시적 요청 시 De-identification Gate를 거쳐 외부 공유 아티클로 변환 | • `~/docsspace/work-ops/00_SSOT_INDEX.md`<br>• `~/docsspace/work-ops/00_TODO.md`<br>• `~/docsspace/work-ops/01_Daily_Logs/YYYY-MM-DD.md` |
-| **Util** | [`diagram-renderer`](skills/diagram-renderer/SKILL.md) | • **유니코드 박스 다이어그램 기본값**: 80~88열 제한 및 한/영(CJK) 혼합 폭 깨짐 방지 레이아웃<br>• **온디맨드 Mermaid**: 명시적 요청 또는 아티팩트 문서 내 문법 안전(`""` 인용) 렌더링 | • 인라인 ASCII 아키텍처/데이터흐름 다이어그램 |
+| **Engineering** | [`diagram`](skills/diagram/SKILL.md) | `diagram templates/init/build` CLI, 결정적 JSON 그리드, 공식 로고·복제/샤딩 `stack`, 실행·이벤트·복구 카드 `flow`, 혼합 카드/타일, 직교 우회·정적 충돌 검사, 인라인 ASCII/Mermaid | 독립 HTML(라이트/다크), 선택 PNG, [예제 5종](skills/diagram/examples/) |
+| **Business / Product (외부)** | `archify` | 비개발자·고객용 업무 흐름·페이지 여정·물리 ERD·한 페이지 설명 | 인터랙티브 HTML 및 내보내기; 별도 설치 |
 
 ---
 

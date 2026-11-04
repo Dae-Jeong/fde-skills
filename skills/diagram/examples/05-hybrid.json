@@ -1,0 +1,65 @@
+{
+  "mode": "flow",
+  "title": "Execution and replicated storage",
+  "icons": [
+    "postgres:postgresql"
+  ],
+  "nodes": [
+    {
+      "id": "validate",
+      "row": 0,
+      "col": 0,
+      "name": "Validate request",
+      "kind": "card",
+      "step": "01",
+      "detail": "JWT + schema",
+      "status": "primary"
+    },
+    {
+      "id": "commit",
+      "row": 0,
+      "col": 1,
+      "name": "Commit transaction",
+      "kind": "card",
+      "step": "02",
+      "detail": "UPSERT + ACK",
+      "status": "success"
+    },
+    {
+      "id": "database",
+      "row": 0,
+      "col": 2,
+      "name": "Database cluster",
+      "kind": "tile",
+      "icon": "postgres",
+      "role": "Primary",
+      "replicas": 3,
+      "badge": "3 replicas"
+    }
+  ],
+  "groups": [
+    {
+      "id": "runtime",
+      "label": "Execution and storage",
+      "nodes": [
+        "validate",
+        "commit",
+        "database"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "validate",
+      "to": "commit",
+      "label": "BEGIN tx"
+    },
+    {
+      "from": "commit",
+      "to": "database",
+      "label": "UPSERT :5432"
+    }
+  ],
+  "kicker": "hybrid / execution and storage",
+  "lede": "A valid request commits once to the primary, which replicates to two standbys."
+}
